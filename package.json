@@ -1,9 +1,12 @@
 {
-  "name": "smooth-twink-vibes",
+  "name": "smooth-twink-vibes-referral-site",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bash scripts/build.sh",
-    "validate": "node scripts/validate-artifact.mjs"
+    "test": "node --test test/site-contract.test.mjs",
+    "validate": "node scripts/validate-site.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs"
   }
 }
