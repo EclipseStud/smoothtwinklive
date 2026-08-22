@@ -3,200 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="A curated, adults-only path to SmoothTwinkVibes on StripChat."
-    />
-    <meta name="theme-color" content="#050505" />
+    <meta name="description" content="You found me. The rest is live." />
+    <meta name="theme-color" content="#070709" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="SmoothTwinkVibes — Curated. Unfiltered." />
-    <meta
-      property="og:description"
-      content="A curated, adults-only path to SmoothTwinkVibes on StripChat."
-    />
-    <meta property="og:image" content="./assets/hero-abstract.png" />
-    <title>SmoothTwinkVibes — Curated. Unfiltered.</title>
+    <meta property="og:title" content="EclipseStud — Watch Me Live" />
+    <meta property="og:description" content="You found me. The rest is live." />
+    <meta property="og:image" content="/assets/hero-abstract.png" />
+    <meta name="clerk-publishable-key" content="{{CLERK_PUBLISHABLE_KEY}}" />
+    <title>EclipseStud — Watch Me Live</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.cdnfonts.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link href="https://fonts.cdnfonts.com/css/aspekta" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="/tracking.js" defer></script>
     <script src="./script.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-
-    <div class="page-glow page-glow--violet" aria-hidden="true"></div>
-    <div class="page-glow page-glow--cyan" aria-hidden="true"></div>
-
     <header class="site-header">
-      <div class="shell header-inner">
-        <a class="brand" href="#main-content" aria-label="SmoothTwinkVibes home">
-          SmoothTwinkVibes
-        </a>
-        <span class="age-mark">18+ only</span>
-        <a
-          class="button button--compact button--primary header-cta"
-          href="https://stripchat.com/SmoothTwinkVibes/follow-me"
-          aria-label="Follow SmoothTwinkVibes on StripChat"
-        >
-          Enter the space
-        </a>
-      </div>
+      <a class="brand" href="#main-content" aria-label="EclipseStud home">ECLIPSESTUD</a>
+      <nav aria-label="Primary navigation"><a href="#about">ABOUT</a><a href="#preview">SOCIALS</a><a href="/live">🔴 LIVE</a></nav>
     </header>
-
-    <main id="main-content" class="site-main">
-      <section class="hero shell" aria-labelledby="hero-title">
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Digital creator space</p>
-          <h1 id="hero-title">Curated.<br /><span>Unfiltered.</span></h1>
-          <p class="hero-intro">
-            Step into a refined digital space where connection meets cinematic atmosphere.
-            Follow when the moment feels right.
-          </p>
-          <div class="hero-actions">
-            <a
-              class="button button--primary button--hero"
-              href="https://stripchat.com/SmoothTwinkVibes/follow-me"
-              aria-label="Follow SmoothTwinkVibes on StripChat"
-            >
-              Follow SmoothTwinkVibes
-            </a>
-            <p class="age-note"><span aria-hidden="true">✓</span> Strictly 18+ only</p>
-          </div>
+          <p class="kicker">ECLIPSESTUD <span aria-hidden="true">•</span> 18+</p>
+          <h1 id="hero-title">YOU FOUND ME.<br /><span>THE REST IS LIVE.</span></h1>
+          <p class="hero-intro">A little mystery, a lot more waiting on the other side.</p>
+          <a class="primary-cta" data-referral-link data-cta-location="hero" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer" aria-label="Enter EclipseStud live room on StripChat">🔴 ENTER MY LIVE ROOM</a>
         </div>
-
-        <div class="hero-bento" aria-hidden="true">
-          <div class="bento-feature">
-            <span class="feature-ribbon feature-ribbon--cyan"></span>
-            <span class="feature-ribbon feature-ribbon--rose"></span>
-            <span class="feature-core"></span>
-            <span class="bento-overlay" aria-hidden="true"></span>
-          </div>
-          <div class="bento-tile bento-tile--rose" aria-hidden="true">
-            <span class="orb orb--rose"></span>
-            <span class="bento-label">Direct</span>
-          </div>
-          <div class="bento-tile bento-tile--cyan" aria-hidden="true">
-            <span class="orb orb--cyan"></span>
-            <span class="bento-label">Cinematic</span>
-          </div>
+        <figure class="hero-art"><img src="./assets/hero-abstract.png" data-protected-media="creator-1" data-protected-alt="Censored creator portrait in pink light" alt="Abstract cyan and rose light" width="1003" height="1568" fetchpriority="high" /></figure>
+      </section>
+      <section id="about" class="section intro-section" aria-labelledby="about-title">
+        <div class="section-heading"><p class="kicker">A LITTLE PREVIEW</p><h2 id="about-title">COME CURIOUS.</h2></div>
+        <div class="preview-cards">
+          <article><p class="card-number">01</p><h3>THE VIBE</h3><p>Playful, chill, unpredictable.</p></article>
+          <article><p class="card-number">02</p><h3>THE ROOM</h3><p>Live interaction. Real reactions.</p></article>
+          <article><p class="card-number">03</p><h3>THE QUESTION</h3><p>What happens after you come in?</p></article>
+        </div>
+        <a class="text-cta" data-referral-link data-cta-location="preview" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">FIND OUT LIVE →</a>
+      </section>
+      <section id="preview" class="section gallery-section" aria-labelledby="gallery-title">
+        <div class="section-heading"><p class="kicker">VISUAL INTERLUDE</p><h2 id="gallery-title">SET THE MOOD.</h2></div>
+        <div class="account-gate" data-account-gate data-state="loading" aria-live="polite">
+          <p data-gate-message>Checking account access…</p>
+          <button type="button" data-clerk-sign-in hidden>Sign in to unlock 18+ previews</button>
+          <form data-age-form hidden>
+            <label><input type="checkbox" data-age-confirmation /> I confirm that I am 18 years of age or older.</label>
+            <button type="submit" data-age-submit>Unlock previews</button>
+            <p>One-time self-attestation tied to your Clerk account. This is not ID-based age verification.</p>
+          </form>
+          <button type="button" data-gate-retry hidden>Retry</button>
+          <div data-clerk-account aria-label="Clerk account controls"></div>
+        </div>
+        <div class="gallery" role="group" aria-label="EclipseStud visual preview">
+          <img src="./assets/hero-abstract.png" data-protected-media="creator-1" data-protected-alt="Censored creator preview in pink light" alt="Locked 18+ creator preview" loading="lazy" width="1003" height="1568" />
+          <img src="./assets/hero-abstract.png" data-protected-media="creator-2" data-protected-alt="Censored creator preview on a softly lit bed" alt="Locked 18+ creator preview" loading="lazy" width="1003" height="1568" />
+          <img src="./assets/hero-abstract.png" alt="Abstract cyan light on a dark background" loading="lazy" width="1003" height="1568" />
         </div>
       </section>
-
-      <section class="vibe shell" id="vibe" aria-labelledby="vibe-title">
-        <div class="vibe-heading">
-          <p class="eyebrow eyebrow--rose">The narrative</p>
-          <h2 id="vibe-title">Three layers<br />of the vibe.</h2>
-        </div>
-        <ol class="vibe-sequence">
-          <li>
-            <span class="sequence-number">01</span>
-            <h3>Intentional</h3>
-            <p>Every frame and every word is selected to keep the experience considered.</p>
-          </li>
-          <li class="vibe-card--cyan">
-            <span class="sequence-number">02</span>
-            <h3>Direct</h3>
-            <p>One clear path to SmoothTwinkVibes, without extra steps or clutter.</p>
-          </li>
-          <li>
-            <span class="sequence-number">03</span>
-            <h3>Evolving</h3>
-            <p>A space that leaves room for new moments and different ways to connect.</p>
-          </li>
-        </ol>
-      </section>
-
-      <section class="reasons shell" id="why-follow" aria-labelledby="reasons-title">
-        <h2 id="reasons-title" class="sr-only">Why follow</h2>
-        <div class="reason-grid">
-          <article class="reason">
-            <span class="reason-icon reason-icon--cyan" aria-hidden="true">↗</span>
-            <h3>Instant entry</h3>
-            <p>Follow once to go straight to the SmoothTwinkVibes profile on StripChat.</p>
-          </article>
-          <article class="reason">
-            <span class="reason-icon reason-icon--rose" aria-hidden="true">○</span>
-            <h3>Clear path</h3>
-            <p>One destination, clearly named, so your next step stays easy to understand.</p>
-          </article>
-          <article class="reason">
-            <span class="reason-icon reason-icon--violet" aria-hidden="true">✦</span>
-            <h3>More connection</h3>
-            <p>A more personal digital introduction, shaped around atmosphere and choice.</p>
-          </article>
+      <section class="section mood-section" aria-labelledby="mood-title">
+        <p class="kicker">INTERACTIVE MOOD</p><h2 id="mood-title">PICK A SIDE.</h2>
+        <div class="mood-actions">
+          <a data-referral-link data-cta-location="mood" data-mood="chill" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">😇 CHILL</a>
+          <a data-referral-link data-cta-location="mood" data-mood="trouble" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">😈 TROUBLE</a>
+          <a data-referral-link data-cta-location="mood" data-mood="surprise_me" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">🔥 SURPRISE ME</a>
         </div>
       </section>
-
-      <section class="invitation shell" aria-labelledby="invitation-title">
-        <div class="invitation-panel">
-          <h2 id="invitation-title">Access is one<br />step away.</h2>
-          <a
-            class="button button--ink button--band"
-            href="https://stripchat.com/SmoothTwinkVibes/follow-me"
-            aria-label="Claim your space with SmoothTwinkVibes on StripChat"
-          >
-            Claim your space
-          </a>
-        </div>
-      </section>
-
-      <section class="faq shell" id="faq" aria-labelledby="faq-title">
-        <h2 id="faq-title">Common queries</h2>
-        <div class="faq-list">
-          <details>
-            <summary>How do I access the full experience?</summary>
-            <p>Use any Follow button to leave this page and visit SmoothTwinkVibes on StripChat.</p>
-          </details>
-          <details>
-            <summary>Is this an 18+ environment?</summary>
-            <p>Yes. This referral and its destination are intended only for adults aged 18 and over.</p>
-          </details>
-          <details>
-            <summary>What defines the vibe?</summary>
-            <p>It is a preference for clear, intentional presentation without pressure or invented promises.</p>
-          </details>
-        </div>
-      </section>
-
-      <section class="final-cta shell" aria-labelledby="final-title">
-        <h2 id="final-title">Stay connected.</h2>
-        <a
-          class="button button--primary button--final"
-          href="https://stripchat.com/SmoothTwinkVibes/follow-me"
-          aria-label="Start the journey with SmoothTwinkVibes on StripChat"
-        >
-          Start the journey
-        </a>
-        <p>18+ only · creator referral</p>
+      <section class="final-section" aria-labelledby="final-title">
+        <p class="kicker">STILL HERE?</p><h2 id="final-title">COME SAY HI.</h2>
+        <a class="primary-cta" data-referral-link data-cta-location="final" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">🔴 WATCH ME LIVE</a>
+        <p class="disclosure">18+ only. Opens StripChat in a new tab.</p>
       </section>
     </main>
-
-    <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <a class="brand brand--footer" href="#main-content" aria-label="Back to top">
-            SmoothTwinkVibes
-          </a>
-          <p>
-            An adults-only creator referral destination. A Follow button takes you to the
-            external creator profile on StripChat.
-          </p>
-        </div>
-        <div class="footer-meta">
-          <nav aria-label="Footer navigation">
-            <a href="#vibe">The vibe</a>
-            <a href="#why-follow">Why follow</a>
-            <a href="#faq">FAQ</a>
-          </nav>
-          <p><span class="age-footer">18+</span> © <span data-current-year></span> SmoothTwinkVibes</p>
-        </div>
-      </div>
-    </footer>
+    <nav aria-label="Mobile live link"><a class="mobile-live-cta" data-referral-link data-cta-location="sticky_mobile" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">🔴 WATCH ECLIPSESTUD LIVE →</a></nav>
+    <footer><span>18+</span> © <span data-current-year></span> ECLIPSESTUD</footer>
   </body>
 </html>

@@ -4,9 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/site-contract.test.mjs",
+    "test": "node --test test/*.test.mjs",
     "validate": "node scripts/validate-site.mjs",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs"
+  },
+  "dependencies": {
+    "@clerk/backend": "^3.16.10",
+    "@clerk/clerk-js": "^6.29.3",
+    "esbuild": "^0.28.2"
   }
 }

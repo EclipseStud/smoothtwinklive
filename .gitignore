@@ -1,2 +1,11 @@
 dist/
+node_modules/
+.env
+.env.*
+!.env.example
+server/generated-content.mjs
+server/production-entry.mjs
+tmp/
+.codex/
+.superdesign/
 .superdesign/tmp/
