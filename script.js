@@ -21,6 +21,7 @@ if (tracking) {
 
 const gate = document.querySelector('[data-account-gate]');
 const signInButton = document.querySelector('[data-clerk-sign-in]');
+const signUpButton = document.querySelector('[data-clerk-sign-up]');
 const ageForm = document.querySelector('[data-age-form]');
 const ageConfirmation = document.querySelector('[data-age-confirmation]');
 const retryButton = document.querySelector('[data-gate-retry]');
@@ -34,6 +35,7 @@ function setGateState(state, message) {
   gate.dataset.state = state;
   gateMessage.textContent = message;
   signInButton.hidden = state !== 'signed-out';
+  signUpButton.hidden = state !== 'signed-out';
   ageForm.hidden = state !== 'needs-attestation';
   retryButton.hidden = state !== 'error';
 }
@@ -58,21 +60,38 @@ async function loadProtectedImages(token) {
   tracking?.record('protected_media_unlocked');
 }
 
+async function loadClerkUi(publishableKey) {
+  const encodedDomain = publishableKey.split('_').slice(2).join('_');
+  const clerkDomain = atob(encodedDomain).slice(0, -1);
+  await new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = `https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`;
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Failed to load Clerk UI'));
+    document.head.appendChild(script);
+  });
+}
+
 async function initializeProtectedMediaGate() {
   const publishableKey = document.querySelector('meta[name="clerk-publishable-key"]')?.content;
   if (!gate || !publishableKey || publishableKey.includes('{{')) {
     setGateState('error', 'Account access is not configured yet.');
     return;
   }
+  await loadClerkUi(publishableKey);
   const clerk = new Clerk(publishableKey);
-  await clerk.load();
+  await clerk.load({ ui: { ClerkUI: window.__internal_ClerkUICtor } });
   if (!clerk.isSignedIn || !clerk.session) {
     setGateState('signed-out', 'Sign in with Clerk to unlock 18+ previews.');
     tracking?.record('auth_prompt_view');
-    signInButton.addEventListener('click', () => clerk.openSignIn({
+    const redirects = {
       signInFallbackRedirectUrl: window.location.href,
       signUpFallbackRedirectUrl: window.location.href,
-    }));
+    };
+    signInButton.addEventListener('click', () => clerk.openSignIn(redirects));
+    signUpButton.addEventListener('click', () => clerk.openSignUp(redirects));
     return;
   }
   if (accountMount) clerk.mountUserButton(accountMount);

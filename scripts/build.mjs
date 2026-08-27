@@ -14,7 +14,7 @@ if (validation.errors.length > 0) {
 }
 
 rmSync(outputRoot, { force: true, recursive: true });
-const staticFiles = ['index.html', 'styles.css', 'tracking.js', 'live.html', 'live.css', 'live.js', 'robots.txt', 'assets/hero-abstract.png'];
+const staticFiles = ['index.html', 'styles.css', 'tracking.js', 'live.html', 'live.css', 'live.js', 'robots.txt', 'sitemap.xml', 'assets/hero-abstract.png'];
 for (const relativePath of staticFiles) {
   const destination = path.join(outputRoot, relativePath);
   mkdirSync(path.dirname(destination), { recursive: true });

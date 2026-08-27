@@ -30,13 +30,17 @@ if (!existsSync(outputRoot)) {
   process.exit(1);
 }
 
-function localTestWorker() {
-  if (process.env.LOCAL_AUTH_TEST_MODE !== '1') return null;
+function localPreviewWorker() {
+  const testAuth = process.env.LOCAL_AUTH_TEST_MODE === '1';
+  const clerkAuth = Boolean(process.env.CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
+  if (!testAuth && !clerkAuth) return null;
   const attestations = new Map();
   const objects = new Map();
   const env = {
-    AGE_POLICY_VERSION: '1',
-    CLERK_PUBLISHABLE_KEY: 'pk_test_local_only',
+    AGE_POLICY_VERSION: process.env.AGE_POLICY_VERSION || '1',
+    CLERK_AUTHORIZED_PARTIES: process.env.CLERK_AUTHORIZED_PARTIES || `http://localhost:${port}`,
+    CLERK_PUBLISHABLE_KEY: testAuth ? 'pk_test_local_only' : process.env.CLERK_PUBLISHABLE_KEY,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     DB: {
       prepare() {
         return { bind(...values) { return {
@@ -57,10 +61,7 @@ function localTestWorker() {
       put: async (key, value) => { objects.set(key, new Uint8Array(value)); },
     },
   };
-  const worker = createWorker({
-    authenticate: async (request) => request.headers.get('authorization') === 'Bearer local-test-token'
-      ? { ok: true, userId: 'local_test_user' }
-      : { ok: false, status: 401 },
+  const options = {
     pages: {
       home: readFileSync(path.join(outputRoot, 'index.html'), 'utf8'),
       live: readFileSync(path.join(outputRoot, 'live.html'), 'utf8'),
@@ -71,11 +72,17 @@ function localTestWorker() {
       'creator-1': new Uint8Array(readFileSync(path.resolve(process.cwd(), 'protected-media', 'creator-censored-1.jpg'))),
       'creator-2': new Uint8Array(readFileSync(path.resolve(process.cwd(), 'protected-media', 'creator-censored-2.jpg'))),
     },
-  });
+  };
+  if (testAuth) {
+    options.authenticate = async (request) => request.headers.get('authorization') === 'Bearer local-test-token'
+      ? { ok: true, userId: 'local_test_user' }
+      : { ok: false, status: 401 };
+  }
+  const worker = createWorker(options);
   return { worker, env };
 }
 
-const localWorker = localTestWorker();
+const localWorker = localPreviewWorker();
 
 createServer(async (request, response) => {
   const requestedPath = decodeURIComponent(new URL(request.url || '/', 'http://localhost').pathname);
@@ -122,5 +129,10 @@ createServer(async (request, response) => {
   });
   createReadStream(filePath).pipe(response);
 }).listen(port, () => {
-  console.log(`Preview running at http://localhost:${port}${localWorker ? ' with local test-only API auth.' : ' with protected APIs fail-closed.'}`);
+  const localApiStatus = !localWorker
+    ? ' with protected APIs fail-closed.'
+    : process.env.LOCAL_AUTH_TEST_MODE === '1'
+      ? ' with test-only local APIs.'
+      : ' with Clerk-backed local APIs.';
+  console.log(`Preview running at http://localhost:${port}${localApiStatus}`);
 });

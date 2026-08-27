@@ -7,7 +7,7 @@
     "test": "node --test test/*.test.mjs",
     "validate": "node scripts/validate-site.mjs",
     "build": "node scripts/build.mjs",
-    "preview": "node scripts/serve.mjs"
+    "preview": "node --env-file-if-exists=.env.local scripts/serve.mjs"
   },
   "dependencies": {
     "@clerk/backend": "^3.16.10",

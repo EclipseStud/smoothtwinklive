@@ -15,6 +15,7 @@ const requiredFiles = [
   'live.js',
   'site-config.mjs',
   'robots.txt',
+  'sitemap.xml',
   'assets/hero-abstract.png',
   'protected-media/creator-censored-1.jpg',
   'protected-media/creator-censored-2.jpg',
@@ -47,6 +48,8 @@ export function validateSite(root) {
   const css = readText(root, 'styles.css');
   const script = readText(root, 'script.js');
   const trackingScript = readText(root, 'tracking.js');
+  const robots = readText(root, 'robots.txt');
+  const sitemap = readText(root, 'sitemap.xml');
   const liveHtml = readText(root, 'live.html');
   const liveCss = readText(root, 'live.css');
   const liveScript = readText(root, 'live.js');
@@ -55,7 +58,13 @@ export function validateSite(root) {
   check(/<main\b/i.test(html), 'HTML must contain a semantic <main> landmark.');
   check(/<h1\b/i.test(html), 'HTML must contain one primary page heading.');
   check(/<meta\s+name=["']description["']/i.test(html), 'HTML must contain a meta description.');
+  check(/<meta\s+name=["']robots["'][^>]+index, follow/i.test(html), 'HTML must include an index/follow robots meta tag.');
+  check(/<link\s+rel=["']icon["'][^>]+hero-abstract\.png/i.test(html), 'HTML must declare the page icon.');
   check(/property=["']og:image["']/i.test(html), 'HTML must declare an Open Graph image.');
+  check(/property=["']og:title["']/i.test(html) && /property=["']og:description["']/i.test(html) && /property=["']og:url["']/i.test(html), 'HTML must include complete Open Graph metadata.');
+  check(/name=["']twitter:card["']/i.test(html) && /name=["']twitter:title["']/i.test(html) && /name=["']twitter:description["']/i.test(html), 'HTML must include X Card metadata.');
+  check(html.includes('https://smoothtwinklive.com/') && !html.includes('eclipsestudmodeling.com'), 'Home search metadata must use only the canonical smoothtwinklive.com domain.');
+  check(/<script\s+type=["']application\/ld\+json["']>[\s\S]*"@type": "WebSite"/i.test(html), 'Home page must include WebSite structured data.');
 
   const referralHrefs = [...html.matchAll(/href=["']([^"']*stripchat\.com[^"']*)["']/gi)].map((match) => match[1]);
   check(
@@ -68,7 +77,13 @@ export function validateSite(root) {
   );
   check(html.includes('ECLIPSESTUD') && html.includes('YOU FOUND ME.'), 'Home page must include EclipseStud cinematic hero copy.');
   check(html.includes('ENTER MY LIVE ROOM'), 'Home page must include its primary live-room CTA.');
-  check(html.includes('A LITTLE PREVIEW') && html.includes('INTERACTIVE MOOD'), 'Home page must include preview and mood sections.');
+  check(html.includes('THE JOURNEY') && html.includes('INTERACTIVE MOOD'), 'Home page must include journey and mood sections.');
+  check(html.includes('href="#preview"') && html.includes('PREVIEW THE VIBE'), 'Home page must include a preview-first secondary CTA.');
+  check(html.includes('PREVIEW THE MOOD') && html.includes('OPEN THE PROFILE') && html.includes('CHOOSE YOUR PACE'), 'Home page must include its concrete three-step journey.');
+  check((html.match(/<details\b/g) || []).length >= 5, 'Home page must include at least five expandable FAQ items.');
+  check(/payment/i.test(html) && /region/i.test(html) && /sessionStorage/.test(html) && /keyboard/i.test(html), 'FAQ must cover payment, regional access, privacy, and accessibility.');
+  check(html.includes('id="benefits"') && html.includes('href="#benefits"'), 'Home page must expose a real internal why-follow destination.');
+  check(html.includes('class="supporting-links"') && html.includes('class="footer-nav"'), 'Home page must include contextual and footer internal navigation.');
   check(html.includes('data-account-gate') && html.includes('data-age-confirmation'), 'Home page must include Clerk account and explicit 18+ controls.');
   check((html.match(/data-protected-media/g) || []).length >= 2, 'Home page must declare protected media placeholders.');
   check(!/src=["'][^"']*creator-censored/i.test(html), 'Protected creator media cannot use public image sources.');
@@ -90,11 +105,19 @@ export function validateSite(root) {
   check(liveHtml.includes('{{STRIPCHAT_REFERRAL_URL}}'), 'Live CTA must use the centralized referral placeholder.');
   check(/target="_blank"/i.test(liveHtml) && /rel="noopener noreferrer"/i.test(liveHtml), 'Live CTA must protect external navigation.');
   check(/<meta\s+name="description"/i.test(liveHtml), 'Live page must include a meta description.');
+  check(/<meta\s+name="robots"[^>]+index, follow/i.test(liveHtml), 'Live page must include an index/follow robots meta tag.');
+  check(/<link\s+rel="icon"[^>]+hero-abstract\.png/i.test(liveHtml), 'Live page must declare the page icon.');
+  check(liveHtml.includes('class="live-links"') && liveHtml.includes('href="/#faq"'), 'Live page must link back to the main content sections.');
   check(/property="og:title"/i.test(liveHtml) && /property="og:description"/i.test(liveHtml), 'Live page must include Open Graph metadata.');
+  check(liveHtml.includes('https://smoothtwinklive.com/live') && !liveHtml.includes('eclipsestudmodeling.com'), 'Live search metadata must use only the canonical smoothtwinklive.com domain.');
+  check(/<script\s+type=["']application\/ld\+json["']>[\s\S]*"@type": "WebPage"/i.test(liveHtml), 'Live page must include WebPage structured data.');
   check(!/<(?:audio|video)\b[^>]*\bautoplay\b/i.test(liveHtml), 'Live page cannot autoplay media.');
   check(liveCss.includes(':focus-visible'), 'Live CSS must include a visible focus state.');
   check(liveCss.includes('min-height: 56px'), 'Live CSS must provide a large CTA target.');
   check(trackingScript.includes('sessionStorage'), 'Tracking must stay first-party and session-scoped.');
+  check(trackingScript.includes('URLSearchParams') && trackingScript.includes('utm_campaign'), 'Tracking must preserve approved UTM attribution locally.');
+  check(robots.includes('Sitemap: https://smoothtwinklive.com/sitemap.xml'), 'robots.txt must advertise the canonical sitemap.');
+  check(sitemap.includes('https://smoothtwinklive.com/') && sitemap.includes('https://smoothtwinklive.com/live') && !/api\/|protected-media|creator-censored/i.test(sitemap), 'Sitemap must list only intended public canonical pages.');
   check(liveScript.includes("record('live_page_view')") && liveScript.includes("record('stripchat_cta_click'"), 'Live tracking must record views and CTA clicks.');
   check(liveSources.every((source) => trackingScript.includes(`'${source}'`)), 'Tracking must support every configured traffic source.');
   return { checks, errors };
