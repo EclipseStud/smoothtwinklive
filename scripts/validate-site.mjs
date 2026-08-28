@@ -111,7 +111,25 @@ export function validateSite(root) {
   check(liveHtml.includes('{{STRIPCHAT_REFERRAL_URL}}'), 'Live CTA must use the centralized referral placeholder.');
   check(/target="_blank"/i.test(liveHtml) && /rel="noopener noreferrer"/i.test(liveHtml), 'Live CTA must protect external navigation.');
   check(liveHtml.includes('href="/why-follow"') && liveHtml.includes('href="/#faq"'), 'Live page must link to WHY FOLLOW and FAQ.');
-  check(liveHtml.includes('https://smoothtwinklive.com/live') && !liveHtml.includes('eclipsestudmodeling.com'), 'Live metadata must use only smoothtwinklive.com.');
+  const liveMetadataUrls = [
+    ...Array.from(liveHtml.matchAll(/<link\b[^>]*\brel=["']canonical["'][^>]*\bhref=["']([^"']+)["'][^>]*>/gi), (m) => m[1]),
+    ...Array.from(liveHtml.matchAll(/<meta\b[^>]*\bproperty=["']og:url["'][^>]*\bcontent=["']([^"']+)["'][^>]*>/gi), (m) => m[1]),
+  ];
+  const liveMetadataHosts = liveMetadataUrls
+    .map((urlValue) => {
+      try {
+        return new URL(urlValue).hostname;
+      } catch {
+        return null;
+      }
+    })
+    .filter((host) => host !== null);
+  check(
+    liveMetadataUrls.some((urlValue) => urlValue === 'https://smoothtwinklive.com/live') &&
+      liveMetadataHosts.length > 0 &&
+      liveMetadataHosts.every((host) => host === 'smoothtwinklive.com'),
+    'Live metadata must use only smoothtwinklive.com.'
+  );
   check(/<script\s+type=["']application\/ld\+json["']>[\s\S]*"@type": "WebPage"/i.test(liveHtml), 'Live page must include WebPage structured data.');
   check(liveCss.includes(':focus-visible') && liveCss.includes('prefers-reduced-motion'), 'Live styles must preserve focus and reduced-motion support.');
   check(liveScript.includes("record('live_page_view')") && liveScript.includes("record('stripchat_cta_click'"), 'Live tracking must record views and CTA clicks.');
