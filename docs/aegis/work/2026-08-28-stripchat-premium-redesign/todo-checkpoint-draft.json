@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "taskId": "2026-08-28-stripchat-premium-redesign",
+  "currentTodo": "Phase 2 — correct Superdesign draft and add RED tests",
+  "completedTodos": [
+    "Phase 1 — Aegis continuity initialized and baseline verified"
+  ],
+  "activeSlice": "Superdesign correction and strict RED contracts",
+  "evidenceRefs": [
+    "baseline-green"
+  ],
+  "blockedOn": null,
+  "nextStep": "Read design context, iterate approved draft, read test guidance, then add failing contracts before production code.",
+  "updatedAt": "2026-08-28"
+}

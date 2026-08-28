@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "requestedOutcome": "Ship a premium high-energy creator referral site with one-click 18+ preview access, a dedicated why-follow route, HTTPS enforcement, complete Dogfood proof, and a public Sites release.",
+  "goal": "Increase qualified StripChat click-through while keeping claims factual and protected creator media private.",
+  "successEvidence": [
+    "Focused RED-GREEN tests, full validation and build, multi-viewport browser QA, complete dogfood report, successful Sites deployment, and hosted HTTPS/referral/preview acceptance."
+  ],
+  "stopCondition": "Done when all proof and hosted acceptance pass; blocked on repeated external failure; needs-verification when hosted proof is unavailable; scope-exceeded if referral, access, or release authority must expand.",
+  "nonGoals": [
+    "No GitHub origin push, domain/access-policy change, fake claims, public creator JPGs, or unrelated cleanup."
+  ],
+  "scope": "Homepage redesign, /why-follow route, /live alignment, anonymous D1 preview sessions, HTTPS/security headers, tests, build, Dogfood, and authorized public Sites deployment.",
+  "changeKinds": [
+    "architectural"
+  ],
+  "riskHints": [
+    "Public adult referral conversion, anonymous age self-attestation, D1 migration, R2 privacy, HTTPS, and deployment."
+  ]
+}

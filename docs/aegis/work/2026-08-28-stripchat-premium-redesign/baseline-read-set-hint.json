@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "candidateDocs": [
+    "index.html; styles.css; script.js; tracking.js; site-config.mjs; live.html; server/worker.mjs; server/auth.mjs; server/protected-media.mjs; test/*.test.mjs; scripts/*.mjs; .openai/hosting.json"
+  ],
+  "whyRelevant": "These files own public UI, exact referral attribution, protected-media access, build/validation, route delivery, and Sites deployment.",
+  "missingAuthority": []
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "affectedLayers": [
+    "Public UI, Worker API, D1 migration, R2 authorization, tests, build, Sites release"
+  ],
+  "owners": [
+    "Site-owning root agent"
+  ],
+  "invariants": [
+    "Exact referral URL and tracking attributes remain; protected creator JPGs never become public; legacy API names remain anonymous-session aliases without external identity auth."
+  ],
+  "compatBoundary": "Preserve /api/access-status, /api/age-attestation, media allowlist, /live source routes, metadata, and public tracking contracts.",
+  "nonGoals": [
+    "No GitHub origin push, domain/access-policy change, fake claims, public creator JPGs, or unrelated cleanup."
+  ]
+}

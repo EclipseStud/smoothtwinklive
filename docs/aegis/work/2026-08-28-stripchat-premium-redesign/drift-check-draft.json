@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "taskId": "2026-08-28-stripchat-premium-redesign",
+  "taskIntentRef": "docs/aegis/work/2026-08-28-stripchat-premium-redesign/task-intent-draft.json",
+  "baselineRefs": [
+    "baseline-green"
+  ],
+  "scopeStatus": "Baseline slice stayed within approved redesign, preview-session, HTTPS, route, Dogfood, and release scope.",
+  "compatStatus": "Exact referral, tracking, metadata, source routes, legacy API aliases, and private R2 invariants remain preserved.",
+  "retirementStatus": "Identity-provider runtime retired after anonymous owner passed focused tests; historical migration and persistent table deletion remain confirmation-first.",
+  "newRiskSignals": [
+    "Persistent legacy D1 rows/table and external tenant records cannot be destructively removed without exact scoped confirmation."
+  ],
+  "decision": "continue"
+}

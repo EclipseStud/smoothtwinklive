@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "taskId": "2026-08-28-stripchat-premium-redesign",
+  "lastCheckpointRef": "docs/aegis/work/2026-08-28-stripchat-premium-redesign/todo-checkpoint-draft.json",
+  "resumeInstruction": "Re-read 10-intent.md, 20-checkpoint.md, current git status, Superdesign init files, and test guidance; preserve pre-existing dirty files and protected media boundary.",
+  "knownPartialWork": [
+    "Phases 1-5 complete — baseline, RED contracts, artwork, premium UI/HTTPS, anonymous D1 owner, and runtime auth retirement"
+  ],
+  "mustReadBeforeContinuing": [
+    "docs/aegis/work/2026-08-28-stripchat-premium-redesign/10-intent.md",
+    "docs/aegis/work/2026-08-28-stripchat-premium-redesign/20-checkpoint.md",
+    "docs/aegis/work/2026-08-28-stripchat-premium-redesign/todo-checkpoint-draft.json"
+  ],
+  "unsafeToAssume": [
+    "Runtime auth removal is green; do not drop production age_attestations table or external tenant records without exact scoped confirmation."
+  ]
+}

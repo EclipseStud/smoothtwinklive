@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdtemp, readFile, rm, writeFile, mkdir } from 'node:fs/promises';
-import os from 'node:os';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
@@ -10,25 +9,69 @@ import { getStripchatUrl } from '../site-config.mjs';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const validator = path.join(projectRoot, 'scripts', 'validate-site.mjs');
+const builder = path.join(projectRoot, 'scripts', 'build.mjs');
 const canonicalCta = getStripchatUrl();
 
-function runValidator(root = projectRoot) {
-  return spawnSync(process.execPath, [validator, '--root', root], {
-    cwd: projectRoot,
-    encoding: 'utf8',
-  });
+function runValidator() {
+  return spawnSync(process.execPath, [validator], { cwd: projectRoot, encoding: 'utf8' });
 }
 
-test('approved Editorial Bento landing page passes its production contract', () => {
-  const result = runValidator();
+function runBuild() {
+  return spawnSync(process.execPath, [builder], { cwd: projectRoot, encoding: 'utf8' });
+}
 
+test('premium SmoothTwinkVibes source passes its production validator', () => {
+  const result = runValidator();
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /Validation passed:/);
 });
 
-test('live funnel has central referral config, source routes, metadata, and event tracking', async () => {
-  const [home, live, config, liveScript, trackingScript] = await Promise.all([
+test('homepage exposes a dense creator funnel without account-wall language', async () => {
+  const [home, styles] = await Promise.all([
     readFile(path.join(projectRoot, 'index.html'), 'utf8'),
+    readFile(path.join(projectRoot, 'styles.css'), 'utf8'),
+  ]);
+
+  for (const line of ['WATCH ME', 'LIVE ON', 'STRIPCHAT.']) assert.match(home, new RegExp(`class="headline-line(?: accent-line)?"[^>]*>${line.replace('.', '\\.')}`));
+  for (const label of ['18+ ONLY', 'LIVE CREATOR', 'DIRECT PROFILE', 'PREVIEW AVAILABLE']) assert.ok(home.includes(label), `Missing trust label: ${label}`);
+  assert.ok((home.match(/class="benefit-card/g) || []).length >= 4);
+  assert.match(home, /I'M 18\+ — SHOW PREVIEWS/);
+  assert.match(home, /data-preview-confirm/);
+  assert.ok((home.match(/data-protected-media/g) || []).length >= 2);
+  assert.match(home, /assets\/creator-placeholder-v1-1536\.jpg/);
+  assert.match(home, /srcset=/);
+  for (const crop of ['hero', 'left', 'right', 'detail']) assert.match(home, new RegExp(`data-placeholder-crop="${crop}"`));
+  assert.doesNotMatch(home, /\bLOCKED\b|\bUNLOCK\w*\b|CENSORED PUBLIC PREVIEW|SIGN IN|CREATE ACCOUNT|CLERK/i);
+  assert.doesNotMatch(home, /viewer(?:s| count)?|countdown|limited[- ]time|LIVE NOW/i);
+  for (const location of ['hero', 'preview_mid', 'lower', 'final', 'sticky_mobile']) {
+    assert.match(home, new RegExp(`data-cta-location="${location}"`));
+  }
+  assert.ok((home.match(/<details\b/g) || []).length >= 5);
+  assert.match(styles, /prefers-reduced-motion/);
+  assert.match(styles, /:focus-visible/);
+  assert.match(styles, /safe-area-inset-bottom/);
+  assert.match(styles, /@media \(max-width: 22rem\)/);
+});
+
+test('WHY FOLLOW is a dedicated same-site page, not a homepage scroll target', async () => {
+  const [home, whyFollow] = await Promise.all([
+    readFile(path.join(projectRoot, 'index.html'), 'utf8'),
+    readFile(path.join(projectRoot, 'why-follow.html'), 'utf8'),
+  ]);
+
+  assert.match(home, /href="\/why-follow"[^>]*>WHY FOLLOW/);
+  assert.doesNotMatch(home, /href="#benefits"[^>]*>WHY FOLLOW/);
+  assert.match(whyFollow, /<link rel="canonical" href="https:\/\/smoothtwinklive\.com\/why-follow"/);
+  assert.match(whyFollow, /WHY FOLLOW[\s\S]*SMOOTHTWINKVIBES/);
+  assert.match(whyFollow, /href="\/"/);
+  assert.match(whyFollow, /href="\/#preview"/);
+  assert.match(whyFollow, /href="\/#faq"/);
+  assert.ok((whyFollow.match(/data-referral-link/g) || []).length >= 2);
+  assert.doesNotMatch(whyFollow, /exclusive clips|early access|guaranteed|discount|free tokens|viewer count/i);
+});
+
+test('live source routes use SmoothTwinkVibes branding and the dedicated WHY FOLLOW page', async () => {
+  const [live, config, liveScript, trackingScript] = await Promise.all([
     readFile(path.join(projectRoot, 'live.html'), 'utf8'),
     readFile(path.join(projectRoot, 'site-config.mjs'), 'utf8'),
     readFile(path.join(projectRoot, 'live.js'), 'utf8'),
@@ -36,213 +79,118 @@ test('live funnel has central referral config, source routes, metadata, and even
   ]);
 
   assert.match(config, /STRIPCHAT_USER_ID = 'SmoothTwinkVibes'/);
-  assert.match(config, /getStripchatUrl/);
-  assert.match(home, /data-referral-link/);
-  assert.match(home, /ECLIPSESTUD/);
-  assert.match(home, /ENTER MY LIVE ROOM/);
-  assert.match(live, /WATCH ECLIPSESTUD LIVE/);
-  assert.match(live, /<title>SmoothTwinkVibes: A Curated Adults-Only Experience<\/title>/);
-  assert.match(live, /href="\/live\.css"/);
-  assert.match(live, /src="\/live\.js"/);
-  assert.match(trackingScript, /sessionStorage/);
+  assert.match(live, /SMOOTHTWINKVIBES/);
+  assert.match(live, /WATCH ME LIVE/);
+  assert.match(live, /href="\/why-follow"/);
+  assert.doesNotMatch(live, /ECLIPSESTUD/i);
   assert.match(liveScript, /live_page_view/);
   assert.match(liveScript, /stripchat_cta_click/);
-  assert.match(liveScript, /mood_selection/);
+  assert.match(trackingScript, /sessionStorage/);
 });
 
-test('crawl metadata and content-depth improvements stay complete and factual', async () => {
-  const [home, live] = await Promise.all([
+test('SEO surface keeps canonical metadata and adds only intended public routes', async () => {
+  const [home, live, whyFollow, robots, sitemap] = await Promise.all([
     readFile(path.join(projectRoot, 'index.html'), 'utf8'),
     readFile(path.join(projectRoot, 'live.html'), 'utf8'),
-  ]);
-  const enhancedDescription = 'Explore SmoothTwinkVibes: a curated, adults-only creator experience with cinematic previews, direct StripChat access, and clear privacy guidance.';
-  const socialDescription = 'Explore curated, adults-only SmoothTwinkVibes on StripChat for a direct and cinematic creator experience.';
-
-  for (const page of [home, live]) {
-    assert.match(page, /<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" \/>/);
-    assert.match(page, /<link rel="icon" type="image\/png" href="\/assets\/hero-abstract\.png" \/>/);
-    assert.ok(page.includes(`<meta name="description" content="${enhancedDescription}" />`));
-    assert.ok(page.includes('<meta property="og:title" content="SmoothTwinkVibes: A Curated Adults-Only Experience" />'));
-    assert.ok(page.includes(`<meta property="og:description" content="${socialDescription}" />`));
-    assert.ok(page.includes('<meta property="og:image" content="https://smoothtwinklive.com/assets/hero-abstract.png" />'));
-    assert.ok(page.includes('<meta name="twitter:card" content="summary_large_image" />'));
-    assert.ok(page.includes('<meta name="twitter:title" content="SmoothTwinkVibes: A Curated Adults-Only Experience" />'));
-    assert.ok(page.includes(`<meta name="twitter:description" content="${socialDescription}" />`));
-  }
-
-  assert.match(home, /href="#preview"[^>]*>PREVIEW THE VIBE/);
-  assert.match(home, /PREVIEW THE MOOD/);
-  assert.match(home, /OPEN THE PROFILE/);
-  assert.match(home, /CHOOSE YOUR PACE/);
-  assert.ok((home.match(/<details\b/g) || []).length >= 5, 'Expected at least five expandable FAQ items.');
-  assert.match(home, /payment/i);
-  assert.match(home, /region/i);
-  assert.match(home, /sessionStorage/);
-  assert.match(home, /keyboard/i);
-  assert.match(home, /reduced motion/i);
-  assert.match(home, /Retry/);
-  assert.match(home, /StripChat presents available account and purchase options after you arrive\./);
-  assert.doesNotMatch(home, /exclusive clips|early access|live Q&As?|limited-time|new post weekly/i);
-  assert.doesNotMatch(home, /free tokens|token discount|guaranteed signup/i);
-});
-
-test('public search surface has one canonical domain, structured data, and a sitemap', async () => {
-  const [home, live, robots, sitemap] = await Promise.all([
-    readFile(path.join(projectRoot, 'index.html'), 'utf8'),
-    readFile(path.join(projectRoot, 'live.html'), 'utf8'),
+    readFile(path.join(projectRoot, 'why-follow.html'), 'utf8'),
     readFile(path.join(projectRoot, 'robots.txt'), 'utf8'),
     readFile(path.join(projectRoot, 'sitemap.xml'), 'utf8'),
   ]);
   const origin = 'https://smoothtwinklive.com';
-
-  for (const [page, pathname] of [[home, '/'], [live, '/live']]) {
+  for (const [page, pathname] of [[home, '/'], [live, '/live'], [whyFollow, '/why-follow']]) {
     assert.ok(page.includes(`<link rel="canonical" href="${origin}${pathname}" />`));
     assert.ok(page.includes(`<meta property="og:url" content="${origin}${pathname}" />`));
+    assert.match(page, /<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" \/>/);
     assert.match(page, /<script type="application\/ld\+json">[\s\S]*"@context": "https:\/\/schema\.org"/);
-    assert.doesNotMatch(page, /eclipsestudmodeling\.com/i);
+    assert.doesNotMatch(page, /http:\/\//i);
   }
-
   assert.match(home, /"@type": "WebSite"/);
   assert.match(live, /"@type": "WebPage"/);
-  assert.match(robots, new RegExp(`Sitemap: ${origin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/sitemap\\.xml`));
-  assert.match(sitemap, /<loc>https:\/\/smoothtwinklive\.com\/<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/smoothtwinklive\.com\/live<\/loc>/);
+  assert.match(whyFollow, /"@type": "WebPage"/);
+  assert.match(robots, /Sitemap: https:\/\/smoothtwinklive\.com\/sitemap\.xml/);
+  for (const pathname of ['/', '/live', '/why-follow']) assert.match(sitemap, new RegExp(`<loc>${origin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${pathname.replace('/', '\\/')}</loc>`));
   assert.doesNotMatch(sitemap, /api\/|protected-media|creator-censored/i);
 });
 
-test('tracking preserves approved UTM attribution without sending it off-site', async () => {
+test('tracking remains first-party and canonical CTA authority remains unchanged', async () => {
   const trackingScript = await readFile(path.join(projectRoot, 'tracking.js'), 'utf8');
-
-  assert.match(trackingScript, /URLSearchParams/);
-  assert.match(trackingScript, /utm_source/);
-  assert.match(trackingScript, /utm_medium/);
-  assert.match(trackingScript, /utm_campaign/);
-  assert.match(trackingScript, /utmContext/);
-  assert.match(trackingScript, /sessionStorage/);
+  assert.equal(canonicalCta, 'https://stripchat.com/SmoothTwinkVibes/follow-me');
+  for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'sessionStorage']) assert.match(trackingScript, new RegExp(key));
   assert.doesNotMatch(trackingScript, /fetch\s*\(|XMLHttpRequest|navigator\.sendBeacon/);
 });
 
-test('internal navigation uses descriptive links to real on-site sections', async () => {
-  const [home, live] = await Promise.all([
-    readFile(path.join(projectRoot, 'index.html'), 'utf8'),
-    readFile(path.join(projectRoot, 'live.html'), 'utf8'),
+test('production build keeps protected media private and contains no Clerk runtime', async () => {
+  const result = runBuild();
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+
+  for (const relativePath of [
+    'assets/creator-censored-1.jpg',
+    'assets/creator-censored-2.jpg',
+    'protected-media',
+  ]) assert.equal(existsSync(path.join(projectRoot, 'dist', relativePath)), false);
+  for (const relativePath of [
+    'why-follow.html',
+    'why-follow.js',
+    'assets/creator-placeholder-v1-768.jpg',
+    'assets/creator-placeholder-v1-1536.jpg',
+    '.openai/drizzle/0001_age_attestations.sql',
+    '.openai/drizzle/0002_preview_sessions.sql',
+  ]) assert.equal(existsSync(path.join(projectRoot, 'dist', relativePath)), true, `Missing built ${relativePath}`);
+
+  const [builtHome, builtScript, builtWorker, packageJson, envExample] = await Promise.all([
+    readFile(path.join(projectRoot, 'dist', 'index.html'), 'utf8'),
+    readFile(path.join(projectRoot, 'dist', 'script.js'), 'utf8'),
+    readFile(path.join(projectRoot, 'dist', 'server', 'index.js'), 'utf8'),
+    readFile(path.join(projectRoot, 'package.json'), 'utf8'),
+    readFile(path.join(projectRoot, '.env.example'), 'utf8'),
   ]);
-
-  for (const sectionId of ['about', 'preview', 'benefits', 'faq']) {
-    assert.ok(home.includes(`id="${sectionId}"`), `Missing internal destination #${sectionId}.`);
-  }
-  assert.match(home, /<nav aria-label="Primary navigation">[^<]*(?:<a[^>]+>[^<]+<\/a>){5}<\/nav>/);
-  assert.match(home, /href="#about">review the three-step journey<\/a>/i);
-  assert.match(home, /href="#benefits">see why following may fit<\/a>/i);
-  assert.match(home, /class="supporting-links"[^>]*>[\s\S]*href="#preview"[\s\S]*href="#faq"/);
-  assert.match(home, /<nav class="footer-nav"[^>]+>[\s\S]*href="#about"[\s\S]*href="#benefits"[\s\S]*href="#faq"[\s\S]*href="\/live"/);
-  assert.match(live, /<nav class="live-links"[^>]+>[\s\S]*href="\/#about"[\s\S]*href="\/#preview"[\s\S]*href="\/#benefits"[\s\S]*href="\/#faq"/);
-  assert.doesNotMatch(`${home}\n${live}`, /href="\/(?:creators|privacy|terms|vibe|why-follow|external-stripchat-hub)(?:[\/#"])/i);
-});
-
-test('validator rejects a CTA destination that drifts from the canonical URL', async () => {
-  const fixture = await mkdtemp(path.join(os.tmpdir(), 'stripchat-referral-contract-'));
-
-  try {
-    await mkdir(path.join(fixture, 'assets'));
-    await writeFile(
-      path.join(fixture, 'index.html'),
-      `<!doctype html><html lang="en"><head><meta name="description" content="Test."><meta property="og:image" content="./og-preview.svg"></head><body><main><h1>Test</h1><a href="https://stripchat.com/wrong">Meet SmoothTwinkVibes</a></main></body></html>`,
-    );
-    await writeFile(path.join(fixture, 'styles.css'), ':focus-visible { outline: 3px solid white; } @media (prefers-reduced-motion: reduce) { * { animation: none; } } .button { min-height: 44px; }');
-    await writeFile(path.join(fixture, 'script.js'), 'document.documentElement.dataset.ready = "true";');
-    await writeFile(path.join(fixture, 'og-preview.svg'), '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
-    await writeFile(path.join(fixture, 'assets', 'hero-abstract.png'), Buffer.from([1]));
-
-    const result = runValidator(fixture);
-
-    assert.notEqual(result.status, 0, 'A non-canonical CTA must fail validation.');
-    assert.match(result.stderr, new RegExp(canonicalCta.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-  } finally {
-    await rm(fixture, { force: true, recursive: true });
-  }
-});
-
-test('production build keeps protected creator media out of public static output', async () => {
-  const result = spawnSync(process.execPath, [path.join(projectRoot, 'scripts', 'build.mjs')], {
-    cwd: projectRoot,
-    encoding: 'utf8',
-  });
-
-  assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.equal(existsSync(path.join(projectRoot, 'dist', 'assets', 'creator-censored-1.jpg')), false);
-  assert.equal(existsSync(path.join(projectRoot, 'dist', 'assets', 'creator-censored-2.jpg')), false);
-  assert.equal(existsSync(path.join(projectRoot, 'dist', 'protected-media')), false);
-  const builtHome = await readFile(path.join(projectRoot, 'dist', 'index.html'), 'utf8');
+  assert.doesNotMatch(`${builtHome}\n${builtScript}\n${builtWorker}\n${packageJson}\n${envExample}`, /clerk|publishable[_-]?key|openSignIn|openSignUp/i);
   assert.doesNotMatch(builtHome, /creator-censored-[12]\.jpg/);
-  const builtWorker = await readFile(path.join(projectRoot, 'dist', 'server', 'index.js'), 'utf8');
-  assert.doesNotMatch(builtWorker, /LOCAL_AUTH_TEST_MODE|local-test-token/);
-
-  const previewServer = await readFile(path.join(projectRoot, 'scripts', 'serve.mjs'), 'utf8');
-  assert.match(previewServer, /const publicFiles = new Set/);
-  assert.match(previewServer, /if \(!publicFiles\.has\(relativePath\)\)/);
 });
 
-test('production build exposes separate Clerk sign-in and sign-up actions', async () => {
-  const result = spawnSync(process.execPath, [path.join(projectRoot, 'scripts', 'build.mjs')], {
-    cwd: projectRoot,
-    encoding: 'utf8',
-  });
-
+test('built CTA links preserve exact destination, safety attributes, and conversion locations', async () => {
+  const result = runBuild();
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  const builtHome = await readFile(path.join(projectRoot, 'dist', 'index.html'), 'utf8');
-  const builtScript = await readFile(path.join(projectRoot, 'dist', 'script.js'), 'utf8');
-
-  assert.match(builtHome, /data-clerk-sign-in/);
-  assert.match(builtHome, /data-clerk-sign-up/);
-  assert.match(builtScript, /ui\.browser\.js/);
-  assert.match(builtScript, /__internal_ClerkUICtor/);
-  assert.match(builtScript, /openSignIn/);
-  assert.match(builtScript, /openSignUp/);
+  const pages = await Promise.all(['index.html', 'why-follow.html', 'live.html'].map((file) => readFile(path.join(projectRoot, 'dist', file), 'utf8')));
+  const anchors = pages.flatMap((page) => [...page.matchAll(/<a\b(?=[^>]*\bdata-referral-link\b)([^>]*)>/g)].map((match) => match[1]));
+  assert.ok(anchors.length >= 8);
+  for (const attributes of anchors) {
+    assert.match(attributes, new RegExp(`href="${canonicalCta.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`));
+    assert.match(attributes, /target="_blank"/);
+    assert.match(attributes, /rel="noopener noreferrer"/);
+    assert.match(attributes, /data-cta-location="[^"]+"/);
+  }
 });
 
-test('local preview injects Clerk configuration from process environment', async (t) => {
+test('local preview provides anonymous remembered access without identity-provider config', async (t) => {
   const port = 43117;
-  const result = spawnSync(process.execPath, [path.join(projectRoot, 'scripts', 'build.mjs')], {
-    cwd: projectRoot,
-    encoding: 'utf8',
-  });
+  const result = runBuild();
   assert.equal(result.status, 0, result.stderr || result.stdout);
-
   const preview = spawn(process.execPath, [path.join(projectRoot, 'scripts', 'serve.mjs')], {
     cwd: projectRoot,
-    env: {
-      ...process.env,
-      PORT: String(port),
-      CLERK_PUBLISHABLE_KEY: 'pk_test_preview_contract',
-      CLERK_SECRET_KEY: 'sk_test_preview_contract',
-      CLERK_AUTHORIZED_PARTIES: `http://localhost:${port}`,
-      AGE_POLICY_VERSION: '1',
-    },
+    env: { ...process.env, PORT: String(port), AGE_POLICY_VERSION: '1' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   t.after(() => preview.kill());
 
-  let previewOutput = '';
+  let output = '';
   await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error('Preview did not start.')), 5000);
     preview.stdout.on('data', (chunk) => {
-      previewOutput += chunk.toString();
-      if (previewOutput.includes('Preview running')) {
-        clearTimeout(timeout);
-        resolve();
-      }
+      output += chunk.toString();
+      if (output.includes('Preview running')) { clearTimeout(timeout); resolve(); }
     });
-    preview.once('exit', (code) => {
-      clearTimeout(timeout);
-      reject(new Error(`Preview exited early with ${code}.`));
-    });
+    preview.once('exit', (code) => { clearTimeout(timeout); reject(new Error(`Preview exited early with ${code}.`)); });
   });
 
-  const response = await fetch(`http://localhost:${port}/`);
-  const home = await response.text();
-  assert.equal(response.status, 200);
-  assert.match(previewOutput, /Clerk-backed local APIs/);
-  assert.match(home, /pk_test_preview_contract/);
-  assert.doesNotMatch(home, /\{\{CLERK_PUBLISHABLE_KEY\}\}/);
+  const initial = await fetch(`http://localhost:${port}/api/preview-session`);
+  assert.deepEqual(await initial.json(), { ageAttested: false });
+  const confirmation = await fetch(`http://localhost:${port}/api/preview-session`, {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ confirmed: true }),
+  });
+  assert.equal(confirmation.status, 204);
+  const cookie = confirmation.headers.get('set-cookie').split(';', 1)[0];
+  const remembered = await fetch(`http://localhost:${port}/api/preview-session`, { headers: { cookie } });
+  assert.deepEqual(await remembered.json(), { ageAttested: true });
+  assert.match(output, /anonymous D1 preview sessions/i);
 });

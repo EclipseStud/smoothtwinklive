@@ -10,8 +10,6 @@
     "preview": "node --env-file-if-exists=.env.local scripts/serve.mjs"
   },
   "dependencies": {
-    "@clerk/backend": "^3.16.10",
-    "@clerk/clerk-js": "^6.29.3",
     "esbuild": "^0.28.2"
   }
 }

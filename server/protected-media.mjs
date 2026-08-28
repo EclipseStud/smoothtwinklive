@@ -7,7 +7,8 @@ const headersFor = (contentType) => ({
   'Content-Type': contentType,
   'Cache-Control': 'private, no-store',
   'X-Content-Type-Options': 'nosniff',
-  'Vary': 'Authorization, Cookie',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'Vary': 'Cookie',
 });
 
 export async function getProtectedMedia(env, mediaId, seedPayloads = {}) {

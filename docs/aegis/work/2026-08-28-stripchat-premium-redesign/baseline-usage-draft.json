@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "aegis.schema.v0",
+  "taskId": "2026-08-28-stripchat-premium-redesign",
+  "requiredBaselineRefs": [
+    "index.html; styles.css; script.js; tracking.js; site-config.mjs; live.html; server/worker.mjs; server/auth.mjs; server/protected-media.mjs; test/*.test.mjs; scripts/*.mjs; .openai/hosting.json"
+  ],
+  "deliveredContextRefs": [],
+  "acknowledgedBeforePlanRefs": [],
+  "citedInPlanRefs": [],
+  "missingRefs": [
+    "index.html; styles.css; script.js; tracking.js; site-config.mjs; live.html; server/worker.mjs; server/auth.mjs; server/protected-media.mjs; test/*.test.mjs; scripts/*.mjs; .openai/hosting.json"
+  ],
+  "decision": "needs-baseline-readback"
+}

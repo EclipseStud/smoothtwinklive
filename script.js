@@ -1,127 +1,120 @@
-import { Clerk } from '@clerk/clerk-js';
-
 const currentYear = document.querySelector('[data-current-year]');
-
-if (currentYear) {
-  currentYear.textContent = String(new Date().getFullYear());
-}
+if (currentYear) currentYear.textContent = String(new Date().getFullYear());
 
 const tracking = window.EclipseStudTracking;
+tracking?.record('landing_page_view');
+document.querySelectorAll('[data-referral-link]').forEach((cta) => {
+  cta.addEventListener('click', () => {
+    tracking?.record('stripchat_cta_click', { cta_location: cta.dataset.ctaLocation || 'homepage' });
+  });
+});
 
-if (tracking) {
-  tracking.record('landing_page_view');
-  document.querySelectorAll('[data-referral-link]').forEach((cta) => {
-    cta.addEventListener('click', () => {
-      const mood = cta.dataset.mood;
-      if (mood) tracking.record('mood_selection', { mood });
-      tracking.record('stripchat_cta_click', { cta_location: cta.dataset.ctaLocation || 'homepage', mood: mood || null });
+const header = document.querySelector('[data-site-header]');
+const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
+updateHeader();
+window.addEventListener('scroll', updateHeader, { passive: true });
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reducedMotion && 'IntersectionObserver' in window) {
+  document.documentElement.classList.add('motion-ready');
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    }
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((item) => revealObserver.observe(item));
+}
+
+if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
+  document.querySelectorAll('[data-parallax]').forEach((panel) => {
+    panel.addEventListener('pointermove', (event) => {
+      const bounds = panel.getBoundingClientRect();
+      panel.style.setProperty('--pointer-x', String((event.clientX - bounds.left) / bounds.width - 0.5));
+      panel.style.setProperty('--pointer-y', String((event.clientY - bounds.top) / bounds.height - 0.5));
+    });
+    panel.addEventListener('pointerleave', () => {
+      panel.style.setProperty('--pointer-x', '0');
+      panel.style.setProperty('--pointer-y', '0');
     });
   });
 }
 
-const gate = document.querySelector('[data-account-gate]');
-const signInButton = document.querySelector('[data-clerk-sign-in]');
-const signUpButton = document.querySelector('[data-clerk-sign-up]');
-const ageForm = document.querySelector('[data-age-form]');
-const ageConfirmation = document.querySelector('[data-age-confirmation]');
-const retryButton = document.querySelector('[data-gate-retry]');
-const gateMessage = document.querySelector('[data-gate-message]');
-const accountMount = document.querySelector('[data-clerk-account]');
+document.querySelectorAll('.faq-list details').forEach((details) => {
+  const summary = details.querySelector('summary');
+  summary?.setAttribute('aria-expanded', String(details.open));
+  details.addEventListener('toggle', () => summary?.setAttribute('aria-expanded', String(details.open)));
+});
+
+const previewAccess = document.querySelector('[data-preview-access]');
+const previewButton = document.querySelector('[data-preview-confirm]');
+const previewMessage = document.querySelector('[data-preview-message]');
 const protectedImages = [...document.querySelectorAll('[data-protected-media]')];
 const objectUrls = new Set();
 
-function setGateState(state, message) {
-  if (!gate) return;
-  gate.dataset.state = state;
-  gateMessage.textContent = message;
-  signInButton.hidden = state !== 'signed-out';
-  signUpButton.hidden = state !== 'signed-out';
-  ageForm.hidden = state !== 'needs-attestation';
-  retryButton.hidden = state !== 'error';
+function setPreviewState(state, message, buttonLabel = "I'M 18+ — SHOW PREVIEWS") {
+  if (!previewAccess || !previewButton || !previewMessage) return;
+  previewAccess.dataset.state = state;
+  previewMessage.textContent = message;
+  previewButton.disabled = state === 'checking' || state === 'loading' || state === 'ready';
+  previewButton.hidden = state === 'ready';
+  previewButton.textContent = buttonLabel;
 }
 
-function clearProtectedMedia() {
-  for (const url of objectUrls) URL.revokeObjectURL(url);
-  objectUrls.clear();
-}
-
-async function loadProtectedImages(token) {
-  for (const mediaId of new Set(protectedImages.map((image) => image.dataset.protectedMedia))) {
-    const response = await fetch(`/api/media/${mediaId}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
-    if (!response.ok) throw new Error('Protected preview unavailable');
+async function loadProtectedImages() {
+  setPreviewState('loading', 'Loading your previews…');
+  const mediaIds = [...new Set(protectedImages.map((image) => image.dataset.protectedMedia))];
+  await Promise.all(mediaIds.map(async (mediaId) => {
+    const response = await fetch(`/api/media/${mediaId}`, { cache: 'no-store', credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Preview media unavailable');
     const objectUrl = URL.createObjectURL(await response.blob());
     objectUrls.add(objectUrl);
     for (const image of protectedImages.filter((item) => item.dataset.protectedMedia === mediaId)) {
+      image.removeAttribute('srcset');
+      image.removeAttribute('sizes');
       image.src = objectUrl;
       image.alt = image.dataset.protectedAlt;
+      image.closest('.gallery-card')?.classList.add('has-private-media');
     }
-  }
-  setGateState('authorized', '18+ previews unlocked for this account.');
-  tracking?.record('protected_media_unlocked');
+  }));
+  setPreviewState('ready', 'Previews ready. Your 18+ confirmation is remembered for 30 days.');
+  tracking?.record('protected_media_ready');
 }
 
-async function loadClerkUi(publishableKey) {
-  const encodedDomain = publishableKey.split('_').slice(2).join('_');
-  const clerkDomain = atob(encodedDomain).slice(0, -1);
-  await new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = `https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`;
-    script.async = true;
-    script.crossOrigin = 'anonymous';
-    script.onload = resolve;
-    script.onerror = () => reject(new Error('Failed to load Clerk UI'));
-    document.head.appendChild(script);
-  });
+async function checkPreviewSession() {
+  if (!previewAccess) return;
+  try {
+    const response = await fetch('/api/preview-session', { cache: 'no-store', credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Preview status unavailable');
+    const status = await response.json();
+    if (status.ageAttested) return loadProtectedImages();
+    setPreviewState('ready-to-confirm', 'One click confirms you are 18+ and remembers this browser for 30 days.');
+  } catch {
+    setPreviewState('error', 'Previews are temporarily unavailable. Try again, or keep going to StripChat.', 'TRY PREVIEWS AGAIN');
+  }
 }
 
-async function initializeProtectedMediaGate() {
-  const publishableKey = document.querySelector('meta[name="clerk-publishable-key"]')?.content;
-  if (!gate || !publishableKey || publishableKey.includes('{{')) {
-    setGateState('error', 'Account access is not configured yet.');
-    return;
+previewButton?.addEventListener('click', async () => {
+  setPreviewState('checking', 'Saving your 18+ confirmation…');
+  try {
+    const response = await fetch('/api/preview-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ confirmed: true }),
+    });
+    if (!response.ok) throw new Error('Preview confirmation unavailable');
+    tracking?.record('age_attestation_complete');
+    await loadProtectedImages();
+  } catch {
+    setPreviewState('error', 'Previews could not load. Try again, or use any StripChat button.', 'TRY PREVIEWS AGAIN');
   }
-  await loadClerkUi(publishableKey);
-  const clerk = new Clerk(publishableKey);
-  await clerk.load({ ui: { ClerkUI: window.__internal_ClerkUICtor } });
-  if (!clerk.isSignedIn || !clerk.session) {
-    setGateState('signed-out', 'Sign in with Clerk to unlock 18+ previews.');
-    tracking?.record('auth_prompt_view');
-    const redirects = {
-      signInFallbackRedirectUrl: window.location.href,
-      signUpFallbackRedirectUrl: window.location.href,
-    };
-    signInButton.addEventListener('click', () => clerk.openSignIn(redirects));
-    signUpButton.addEventListener('click', () => clerk.openSignUp(redirects));
-    return;
-  }
-  if (accountMount) clerk.mountUserButton(accountMount);
-  const token = await clerk.session.getToken();
-  const response = await fetch('/api/access-status', { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
-  if (!response.ok) throw new Error('Account access check failed');
-  const status = await response.json();
-  if (!status.ageAttested) {
-    setGateState('needs-attestation', 'Confirm you are 18 or older to unlock previews.');
-    ageForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (!ageConfirmation.checked) return ageConfirmation.focus();
-      try {
-        const confirmation = await fetch('/api/age-attestation', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ confirmed: true }),
-        });
-        if (!confirmation.ok) throw new Error('Age confirmation failed');
-        tracking?.record('age_attestation_complete');
-        await loadProtectedImages(token);
-      } catch {
-        setGateState('error', 'Preview access failed. Please retry.');
-      }
-    }, { once: true });
-    return;
-  }
-  await loadProtectedImages(token);
-}
+});
 
-retryButton?.addEventListener('click', () => window.location.reload());
-window.addEventListener('pagehide', clearProtectedMedia);
-initializeProtectedMediaGate().catch(() => setGateState('error', 'Preview access failed. Please retry.'));
+window.addEventListener('pagehide', () => {
+  for (const objectUrl of objectUrls) URL.revokeObjectURL(objectUrl);
+  objectUrls.clear();
+});
+
+checkPreviewSession();

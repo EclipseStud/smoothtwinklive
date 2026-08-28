@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Explore SmoothTwinkVibes: a curated, adults-only creator experience with cinematic previews, direct StripChat access, and clear privacy guidance." />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="theme-color" content="#070709" />
+    <meta name="theme-color" content="#07070b" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="SmoothTwinkVibes: A Curated Adults-Only Experience" />
     <meta property="og:description" content="Explore curated, adults-only SmoothTwinkVibes on StripChat for a direct and cinematic creator experience." />
@@ -18,7 +18,6 @@
     <meta name="twitter:description" content="Explore curated, adults-only SmoothTwinkVibes on StripChat for a direct and cinematic creator experience." />
     <meta name="twitter:image" content="https://smoothtwinklive.com/assets/hero-abstract.png" />
     <meta name="twitter:image:alt" content="Abstract cyan and rose light" />
-    <meta name="clerk-publishable-key" content="{{CLERK_PUBLISHABLE_KEY}}" />
     <title>SmoothTwinkVibes: A Curated Adults-Only Experience</title>
     <link rel="canonical" href="https://smoothtwinklive.com/" />
     <link rel="icon" type="image/png" href="/assets/hero-abstract.png" />
@@ -30,119 +29,208 @@
         "url": "https://smoothtwinklive.com/"
       }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="/styles.css" />
     <script src="/tracking.js" defer></script>
-    <script src="./script.js" defer></script>
+    <script src="/script.js" defer></script>
   </head>
-  <body>
+  <body data-page="home">
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header">
-      <a class="brand" href="#main-content" aria-label="EclipseStud home">ECLIPSESTUD</a>
-      <nav aria-label="Primary navigation"><a href="#about">JOURNEY</a><a href="#preview">PREVIEW</a><a href="#benefits">WHY FOLLOW</a><a href="#faq">FAQ</a><a href="/live">🔴 LIVE</a></nav>
+
+    <header class="site-header" data-site-header>
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="SmoothTwinkVibes home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-long">SMOOTHTWINKVIBES</span><span class="brand-short">STV</span>
+        </a>
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <a class="nav-optional" href="#about">ABOUT</a>
+          <a href="#preview">PREVIEW</a>
+          <a class="nav-optional" href="#faq">FAQ</a>
+          <a href="/why-follow">WHY FOLLOW</a>
+          <a class="nav-live" href="/live"><span class="live-dot" aria-hidden="true"></span>LIVE</a>
+        </nav>
+      </div>
     </header>
+
     <main id="main-content">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="kicker">ECLIPSESTUD <span aria-hidden="true">•</span> 18+</p>
-          <h1 id="hero-title">YOU FOUND ME.<br /><span>THE REST IS LIVE.</span></h1>
-          <p class="hero-intro">A curated 18+ creator introduction with cinematic previews and one direct path to SmoothTwinkVibes on StripChat.</p>
-          <div class="hero-actions">
-            <a class="primary-cta" data-referral-link data-cta-location="hero" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer" aria-label="Enter EclipseStud live room on StripChat">🔴 ENTER MY LIVE ROOM</a>
-            <a class="secondary-cta" href="#preview">PREVIEW THE VIBE ↓</a>
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> CREATOR PROFILE <span aria-hidden="true">·</span> 18+</p>
+          <h1 id="hero-title">
+            <span class="headline-line">WATCH ME</span>
+            <span class="headline-line accent-line">LIVE ON</span>
+            <span class="headline-line">STRIPCHAT.</span>
+          </h1>
+          <p class="hero-intro"><strong>COME HANG OUT WITH ME.</strong> Catch me live, say hey, or see what I’m up to.</p>
+          <div class="button-row">
+            <a class="button button-primary" data-referral-link data-cta-location="hero" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer" aria-label="Watch SmoothTwinkVibes live on StripChat">WATCH ME LIVE ON STRIPCHAT <span aria-hidden="true">↗</span></a>
+            <a class="button button-secondary" href="#preview">PREVIEW FIRST <span aria-hidden="true">↓</span></a>
           </div>
+          <p class="microcopy"><span aria-hidden="true">✦</span> Direct profile link · Opens StripChat in a new tab · 18+ only</p>
         </div>
-        <figure class="hero-art"><img src="./assets/hero-abstract.png" data-protected-media="creator-1" data-protected-alt="Censored creator portrait in pink light" alt="Abstract cyan and rose light" width="1003" height="1568" fetchpriority="high" /></figure>
+
+        <div class="hero-visual reveal" data-parallax>
+          <div class="visual-halo" aria-hidden="true"></div>
+          <figure class="creator-frame">
+            <img src="/assets/creator-placeholder-v1-1536.jpg" srcset="/assets/creator-placeholder-v1-768.jpg 768w, /assets/creator-placeholder-v1-1536.jpg 1536w" sizes="(max-width: 56rem) calc(100vw - 2rem), 45vw" data-placeholder-crop="hero" alt="Faceless adult in a dark suit under pink and cyan nightclub lighting; editorial placeholder artwork" width="1536" height="1024" fetchpriority="high" />
+            <figcaption>EDITORIAL PLACEHOLDER <span aria-hidden="true">·</span> NOT CREATOR LIKENESS</figcaption>
+          </figure>
+          <div class="visual-badge badge-live"><span class="live-dot" aria-hidden="true"></span> LIVE CREATOR</div>
+          <div class="visual-badge badge-profile">SMOOTHTWINKVIBES <span aria-hidden="true">↗</span></div>
+          <div class="visual-orbit orbit-one" aria-hidden="true"></div>
+          <div class="visual-orbit orbit-two" aria-hidden="true"></div>
+        </div>
+
+        <a class="scroll-cue" href="#about"><span>SCROLL TO EXPLORE</span><i aria-hidden="true"></i></a>
       </section>
-      <section id="about" class="section intro-section" aria-labelledby="about-title">
-        <div class="section-heading"><p class="kicker">THE JOURNEY</p><h2 id="about-title">THREE CLEAR STEPS.</h2></div>
-        <div class="preview-cards">
-          <article><p class="card-number">01</p><h3>PREVIEW THE MOOD</h3><p>Start with abstract imagery and account-gated censored stills that introduce the atmosphere.</p></article>
-          <article><p class="card-number">02</p><h3>OPEN THE PROFILE</h3><p>Use one clearly labeled link to open SmoothTwinkVibes on StripChat in a new tab.</p></article>
-          <article><p class="card-number">03</p><h3>CHOOSE YOUR PACE</h3><p>On StripChat, decide whether to follow the profile or enter live chat when those controls are available.</p></article>
-        </div>
-        <a class="text-cta" data-referral-link data-cta-location="journey" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">OPEN SMOOTHTWINKVIBES ON STRIPCHAT →</a>
-      </section>
-      <section id="preview" class="section gallery-section" aria-labelledby="gallery-title">
-        <div class="section-heading"><p class="kicker">CINEMATIC PREVIEW</p><h2 id="gallery-title">PREVIEW THE VIBE.</h2></div>
-        <div class="account-gate" data-account-gate data-state="loading" aria-live="polite">
-          <p data-gate-message>Checking account access…</p>
-          <button type="button" data-clerk-sign-in hidden>Sign in to unlock 18+ previews</button>
-          <button type="button" data-clerk-sign-up hidden>Create account to unlock 18+ previews</button>
-          <form data-age-form hidden>
-            <label><input type="checkbox" data-age-confirmation /> I confirm that I am 18 years of age or older.</label>
-            <button type="submit" data-age-submit>Unlock previews</button>
-            <p>One-time self-attestation tied to your Clerk account. This is not ID-based age verification.</p>
-          </form>
-          <button type="button" data-gate-retry hidden>Retry</button>
-          <div data-clerk-account aria-label="Clerk account controls"></div>
-        </div>
-        <div class="gallery" role="group" aria-label="EclipseStud visual preview">
-          <img src="./assets/hero-abstract.png" data-protected-media="creator-1" data-protected-alt="Censored creator preview in pink light" alt="Locked 18+ creator preview" loading="lazy" width="1003" height="1568" />
-          <img src="./assets/hero-abstract.png" data-protected-media="creator-2" data-protected-alt="Censored creator preview on a softly lit bed" alt="Locked 18+ creator preview" loading="lazy" width="1003" height="1568" />
-          <img src="./assets/hero-abstract.png" alt="Abstract cyan light on a dark background" loading="lazy" width="1003" height="1568" />
+
+      <section class="trust-strip" aria-label="Quick visit details">
+        <div class="shell trust-grid">
+          <p><span aria-hidden="true">18</span>18+ ONLY</p>
+          <p><span class="live-dot" aria-hidden="true"></span>LIVE CREATOR</p>
+          <p><span aria-hidden="true">↗</span>DIRECT PROFILE</p>
+          <p><span aria-hidden="true">◫</span>PREVIEW AVAILABLE</p>
         </div>
       </section>
-      <section id="benefits" class="section benefits-section" aria-labelledby="benefits-title">
-        <div class="section-heading"><p class="kicker">WHY FOLLOW</p><h2 id="benefits-title">CLEAR BY DESIGN.</h2></div>
-        <ul class="benefit-list" aria-label="Reasons to continue to SmoothTwinkVibes on StripChat">
-          <li><span aria-hidden="true">✓</span><div><h3>DIRECT PROFILE PATH</h3><p>One destination, clearly named, with no extra navigation between this page and SmoothTwinkVibes.</p></div></li>
-          <li><span aria-hidden="true">✓</span><div><h3>PREVIEW BEFORE LEAVING</h3><p>See the visual direction here first; protected creator previews remain behind account and 18+ controls.</p></div></li>
-          <li><span aria-hidden="true">✓</span><div><h3>YOUR NEXT STEP</h3><p>StripChat controls profile, follow, and live-chat availability. You choose whether to continue.</p></div></li>
-        </ul>
-        <a class="text-cta" data-referral-link data-cta-location="benefits" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">OPEN THE PROFILE ON STRIPCHAT →</a>
-        <nav class="supporting-links" aria-label="Explore before leaving"><a href="#preview">PREVIEW THE VIBE</a><a href="#faq">READ THE FAQ</a></nav>
-        <p class="disclosure left-disclosure">18+ only. External StripChat destination.</p>
-      </section>
-      <section class="section mood-section" aria-labelledby="mood-title">
-        <p class="kicker">INTERACTIVE MOOD</p><h2 id="mood-title">PICK A SIDE.</h2>
-        <div class="mood-actions">
-          <a data-referral-link data-cta-location="mood" data-mood="chill" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">😇 CHILL</a>
-          <a data-referral-link data-cta-location="mood" data-mood="trouble" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">😈 TROUBLE</a>
-          <a data-referral-link data-cta-location="mood" data-mood="surprise_me" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">🔥 SURPRISE ME</a>
+
+      <section id="about" class="section shell" aria-labelledby="about-title">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow">WHY WATCH?</p><h2 id="about-title">COME HANG<br />OUT WITH ME.</h2></div>
+          <p>One direct route to my StripChat profile. What happens next stays your choice.</p>
+        </div>
+        <div class="benefit-grid">
+          <article class="benefit-card reveal">
+            <span class="card-icon" aria-hidden="true">◉</span><p class="card-index">01</p>
+            <h3>CATCH ME LIVE</h3><p>Open my profile and see my current availability on StripChat.</p>
+          </article>
+          <article class="benefit-card reveal">
+            <span class="card-icon" aria-hidden="true">◇</span><p class="card-index">02</p>
+            <h3>CHAT DIRECTLY</h3><p>Use the chat options StripChat makes available for your account.</p>
+          </article>
+          <article class="benefit-card reveal">
+            <span class="card-icon" aria-hidden="true">↗</span><p class="card-index">03</p>
+            <h3>WATCH YOUR WAY</h3><p>Browse, watch, or say hi. You decide how far to take it.</p>
+          </article>
+          <article class="benefit-card reveal">
+            <span class="card-icon" aria-hidden="true">✦</span><p class="card-index">04</p>
+            <h3>EXPLORE OPTIONS</h3><p>StripChat shows features available for your account and region.</p>
+          </article>
         </div>
       </section>
-      <section id="faq" class="section faq-section" aria-labelledby="faq-title">
-        <div class="section-heading"><p class="kicker">COMMON QUESTIONS</p><h2 id="faq-title">BEFORE YOU GO.</h2></div>
-        <div class="faq-list">
+
+      <section id="preview" class="section preview-section" aria-labelledby="preview-title">
+        <div class="shell">
+          <div class="section-heading preview-heading reveal">
+            <div><p class="eyebrow">VISUAL TASTE</p><h2 id="preview-title">A LITTLE<br />PREVIEW.</h2></div>
+            <p>See the vibe here first. One tap confirms you’re 18 or older—no account or checkbox.</p>
+          </div>
+
+          <div class="preview-access reveal" data-preview-access data-state="checking" aria-live="polite">
+            <div>
+              <p class="preview-access-title">READY FOR THE PREVIEWS?</p>
+              <p data-preview-message>Checking whether this browser already confirmed 18+ access…</p>
+            </div>
+            <button class="button button-confirm" type="button" data-preview-confirm>I'M 18+ — SHOW PREVIEWS</button>
+          </div>
+
+          <div class="preview-gallery" aria-label="SmoothTwinkVibes preview gallery">
+            <figure class="gallery-card gallery-featured reveal" data-parallax>
+              <img src="/assets/creator-placeholder-v1-1536.jpg" srcset="/assets/creator-placeholder-v1-768.jpg 768w, /assets/creator-placeholder-v1-1536.jpg 1536w" sizes="(max-width: 45rem) calc(100vw - 2rem), 56vw" data-placeholder-crop="left" data-protected-media="creator-1" data-protected-alt="Censored SmoothTwinkVibes creator preview" alt="Faceless adult in a dark suit in cyan and magenta nightclub lighting; editorial placeholder artwork" width="1536" height="1024" />
+              <figcaption><span>01</span><strong>AFTER DARK</strong><small>PUBLIC EDITORIAL PLACEHOLDER</small></figcaption>
+            </figure>
+            <figure class="gallery-card gallery-tall reveal" data-parallax>
+              <img src="/assets/creator-placeholder-v1-768.jpg" srcset="/assets/creator-placeholder-v1-768.jpg 768w, /assets/creator-placeholder-v1-1536.jpg 1536w" sizes="(max-width: 45rem) 48vw, 38vw" data-placeholder-crop="right" data-protected-media="creator-2" data-protected-alt="Censored SmoothTwinkVibes creator preview" alt="Close detail of a faceless adult in a textured dark jacket under violet light; editorial placeholder artwork" width="768" height="512" loading="lazy" />
+              <figcaption><span>02</span><strong>CLOSER LOOK</strong><small>PUBLIC EDITORIAL PLACEHOLDER</small></figcaption>
+            </figure>
+            <figure class="gallery-card gallery-detail reveal" data-parallax>
+              <img src="/assets/creator-placeholder-v1-768.jpg" srcset="/assets/creator-placeholder-v1-768.jpg 768w, /assets/creator-placeholder-v1-1536.jpg 1536w" sizes="(max-width: 45rem) 48vw, 38vw" data-placeholder-crop="detail" alt="Nightclub portrait detail with cyan light and a dark faceless silhouette; editorial placeholder artwork" width="768" height="512" loading="lazy" />
+              <figcaption><span>03</span><strong>THE VIBE</strong><small>PUBLIC EDITORIAL PLACEHOLDER</small></figcaption>
+            </figure>
+          </div>
+          <noscript><p class="noscript-note">JavaScript is needed for private preview media. The public artwork and StripChat links remain available.</p></noscript>
+        </div>
+      </section>
+
+      <section class="cta-band shell reveal" aria-labelledby="preview-cta-title">
+        <div><p class="eyebrow">LIKE WHAT YOU SEE?</p><h2 id="preview-cta-title">THERE’S MORE<br />WHEN I’M LIVE.</h2></div>
+        <a class="button button-primary button-xl" data-referral-link data-cta-location="preview_mid" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">WATCH ME LIVE <span aria-hidden="true">↗</span></a>
+      </section>
+
+      <section id="expect" class="section shell expect-section" aria-labelledby="expect-title">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow">WHAT TO EXPECT</p><h2 id="expect-title">YOUR VISIT.<br />YOUR CHOICE.</h2></div>
+          <a class="arrow-link" href="/why-follow">WHY FOLLOW? <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="expect-grid">
+          <article class="expect-card reveal"><span aria-hidden="true">01</span><div><h3>DIRECT PROFILE</h3><p>Every pink button goes to SmoothTwinkVibes on StripChat—no mystery destination.</p></div></article>
+          <article class="expect-card reveal"><span aria-hidden="true">02</span><div><h3>STRIPCHAT CONTROLS</h3><p>Availability, account options, prices, payment methods, and regional access appear there.</p></div></article>
+          <article class="expect-card reveal"><span aria-hidden="true">03</span><div><h3>NO PRESSURE</h3><p>Take a look, chat if available, or close the tab. Your next move is yours.</p></div></article>
+        </div>
+        <div class="lower-action reveal">
+          <p><strong>SEE YOU OVER THERE.</strong><br />Open my profile and come say hi.</p>
+          <a class="button button-primary" data-referral-link data-cta-location="lower" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">OPEN MY STRIPCHAT <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section id="faq" class="section faq-section shell" aria-labelledby="faq-title">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">QUICK<br />ANSWERS.</h2></div>
+          <p>Clear details before you open StripChat.</p>
+        </div>
+        <div class="faq-list reveal">
           <details>
-            <summary>How do I access the full experience?</summary>
-            <p>Use any StripChat button to open the SmoothTwinkVibes profile in a new tab. StripChat shows the follow and live-chat controls available for your account and region. StripChat presents available account and purchase options after you arrive. Before leaving, <a href="#about">review the three-step journey</a> or <a href="#benefits">see why following may fit</a>.</p>
+            <summary>How do I get to your live profile?</summary>
+            <p>Use any pink StripChat button. It opens the exact SmoothTwinkVibes referral profile in a new tab. StripChat shows the profile and live-chat controls available for your account and region.</p>
           </details>
           <details>
             <summary>Is this an 18+ environment?</summary>
-            <p>Yes. This referral and its destination are intended only for adults aged 18 and over. Protected previews also require Clerk sign-in and a one-time, account-bound 18+ self-attestation. It is not ID-based age verification.</p>
+            <p>Yes. This site and its StripChat destination are intended only for adults aged 18 and over. The preview button is self-attestation, not identity or ID verification.</p>
           </details>
           <details>
-            <summary>What if payment methods or access are restricted in my region?</summary>
-            <p>This site does not process payments or collect payment details. StripChat controls prices, payment methods, and regional or account availability, which may vary. Check the information shown in your StripChat account or contact StripChat support.</p>
+            <summary>How does preview access work?</summary>
+            <p>Press “I’m 18+ — show previews” once. A random browser token remembers the confirmation for 30 days. Only its SHA-256 hash, attestation time, expiration, and policy version are stored in D1—no account or identity is required.</p>
+          </details>
+          <details>
+            <summary>What if payment methods or access vary in my region?</summary>
+            <p>This site does not process payments or collect payment details. StripChat controls prices, payment methods, and regional or account availability. Check what StripChat shows after you arrive.</p>
           </details>
           <details>
             <summary>What data does this page keep?</summary>
-            <p>The current site code keeps up to 20 source, CTA, and mood events in <code>sessionStorage</code> for the current browser session and does not send that history to an external analytics endpoint. For <a href="#preview">protected previews</a>, your Clerk user ID, attestation time, and policy version are stored server-side to remember access. StripChat applies its own privacy practices after you leave.</p>
+            <p>Up to 20 source and CTA events stay in <code>sessionStorage</code> for this browser session and are not sent to an external analytics endpoint by this site. Preview confirmation uses the privacy-preserving token hash described above. StripChat has separate privacy practices after you leave.</p>
           </details>
           <details>
             <summary>What accessibility support is included?</summary>
-            <p>This page supports keyboard navigation, visible focus states, descriptive image text, and reduced motion preferences. StripChat is a separate service with its own accessibility support.</p>
+            <p>Semantic landmarks, keyboard navigation, visible focus states, descriptive image text, touch-friendly controls, and reduced motion support are included. StripChat is a separate service with its own accessibility support.</p>
           </details>
           <details>
-            <summary>What should I do if previews stay locked?</summary>
-            <p>Return to the <a href="#preview">protected preview controls</a>, sign in, complete the 18+ self-attestation, then use Retry. Access stays locked if Clerk or protected-storage configuration is unavailable. The public StripChat links remain available without opening protected previews.</p>
+            <summary>What if previews do not load?</summary>
+            <p>Use the compact retry button in the preview section. The polished public placeholders stay visible, and every StripChat button keeps working even if preview storage or media is unavailable.</p>
           </details>
         </div>
       </section>
-      <section class="final-section" aria-labelledby="final-title">
-        <p class="kicker">STILL HERE?</p><h2 id="final-title">COME SAY HI.</h2>
-        <a class="primary-cta" data-referral-link data-cta-location="final" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">🔴 WATCH ME LIVE</a>
-        <p class="disclosure">18+ only. Opens StripChat in a new tab.</p>
+
+      <section class="final-cta" aria-labelledby="final-title">
+        <img src="/assets/creator-placeholder-v1-1536.jpg" srcset="/assets/creator-placeholder-v1-768.jpg 768w, /assets/creator-placeholder-v1-1536.jpg 1536w" sizes="100vw" alt="" width="1536" height="1024" loading="lazy" aria-hidden="true" />
+        <div class="final-overlay" aria-hidden="true"></div>
+        <div class="shell final-content reveal">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> SMOOTHTWINKVIBES · 18+</p>
+          <h2 id="final-title"><span>I’LL SEE YOU</span><span>ON STRIPCHAT.</span></h2>
+          <p>That’s the preview. The direct profile is one click away.</p>
+          <a class="button button-primary button-xl" data-referral-link data-cta-location="final" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">WATCH ME LIVE <span aria-hidden="true">↗</span></a>
+        </div>
       </section>
     </main>
-    <nav aria-label="Mobile live link"><a class="mobile-live-cta" data-referral-link data-cta-location="sticky_mobile" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer">🔴 WATCH ECLIPSESTUD LIVE →</a></nav>
-    <footer>
-      <p><span>18+</span> © <span data-current-year></span> ECLIPSESTUD</p>
-      <nav class="footer-nav" aria-label="Footer navigation"><a href="#about">THE JOURNEY</a><a href="#benefits">WHY FOLLOW</a><a href="#faq">FAQ</a><a href="/live">LIVE PAGE</a></nav>
+
+    <nav class="mobile-action" aria-label="Mobile StripChat link">
+      <a class="button button-primary" data-referral-link data-cta-location="sticky_mobile" href="{{STRIPCHAT_REFERRAL_URL}}" target="_blank" rel="noopener noreferrer"><span class="live-dot" aria-hidden="true"></span> WATCH ME LIVE <span aria-hidden="true">↗</span></a>
+    </nav>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <p><strong>SMOOTHTWINKVIBES</strong><br /><span>18+ creator referral site.</span></p>
+        <nav aria-label="Footer navigation"><a href="#about">ABOUT</a><a href="#preview">PREVIEW</a><a href="/why-follow">WHY FOLLOW</a><a href="#faq">FAQ</a><a href="/live">LIVE PAGE</a></nav>
+        <p class="footer-legal">© <span data-current-year></span> SmoothTwinkVibes. StripChat is a separate service. Referral links may credit this creator if eligible activity occurs.</p>
+      </div>
     </footer>
   </body>
 </html>
