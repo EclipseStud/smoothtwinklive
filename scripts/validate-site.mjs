@@ -5,6 +5,25 @@ import { getStripchatUrl, liveSources } from '../site-config.mjs';
 
 export const canonicalCta = getStripchatUrl();
 
+function extractUrlHostnames(html) {
+  const hostnames = [];
+  const attrRegex = /\b(?:href|src|content)=["']([^"']+)["']/gi;
+  let match;
+  while ((match = attrRegex.exec(html)) !== null) {
+    const raw = match[1].trim();
+    if (!raw) continue;
+    try {
+      const parsed = new URL(raw, 'https://smoothtwinklive.com');
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        hostnames.push(parsed.hostname.toLowerCase());
+      }
+    } catch {
+      // Ignore non-URL attribute values.
+    }
+  }
+  return hostnames;
+}
+
 function hasExpectedCanonicalUrl(html, expected) {
   const canonicalMatch = html.match(/<link\b[^>]*\brel=["']canonical["'][^>]*\bhref=["']([^"']+)["'][^>]*>/i);
   if (!canonicalMatch) return false;
@@ -71,7 +90,10 @@ export function validateSite(root) {
   check(/<meta\s+name=["']robots["'][^>]+index, follow/i.test(html), 'Home page must include index/follow robots metadata.');
   check(/property=["']og:title["']/i.test(html) && /property=["']og:description["']/i.test(html) && /property=["']og:url["']/i.test(html), 'Home page must include complete Open Graph metadata.');
   check(/name=["']twitter:card["']/i.test(html) && /name=["']twitter:title["']/i.test(html), 'Home page must include X Card metadata.');
-  check(html.includes('https://smoothtwinklive.com/') && !html.includes('eclipsestudmodeling.com'), 'Home metadata must use only smoothtwinklive.com.');
+  const homeHostnames = extractUrlHostnames(html);
+  const hasSmoothTwinkHost = homeHostnames.some((hostname) => hostname === 'smoothtwinklive.com' || hostname === 'www.smoothtwinklive.com');
+  const hasEclipseStudHost = homeHostnames.some((hostname) => hostname === 'eclipsestudmodeling.com' || hostname.endsWith('.eclipsestudmodeling.com'));
+  check(hasSmoothTwinkHost && !hasEclipseStudHost, 'Home metadata must use only smoothtwinklive.com.');
   check(/<script\s+type=["']application\/ld\+json["']>[\s\S]*"@type": "WebSite"/i.test(html), 'Home page must include WebSite structured data.');
   check(!/href=["'][^"']*stripchat\.com/i.test(html), `Raw CTA links must resolve only through site-config.mjs as ${canonicalCta}.`);
   check((html.match(/data-referral-link/g) || []).length >= 5, 'Home page must include at least five referral CTA locations.');
