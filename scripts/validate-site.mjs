@@ -5,6 +5,20 @@ import { getStripchatUrl, liveSources } from '../site-config.mjs';
 
 export const canonicalCta = getStripchatUrl();
 
+function hasExpectedCanonicalUrl(html, expected) {
+  const canonicalMatch = html.match(/<link\b[^>]*\brel=["']canonical["'][^>]*\bhref=["']([^"']+)["'][^>]*>/i);
+  if (!canonicalMatch) return false;
+  try {
+    const parsed = new URL(canonicalMatch[1]);
+    const expectedParsed = new URL(expected);
+    return parsed.protocol === expectedParsed.protocol &&
+      parsed.hostname === expectedParsed.hostname &&
+      parsed.pathname === expectedParsed.pathname;
+  } catch {
+    return false;
+  }
+}
+
 const requiredFiles = [
   'index.html', 'styles.css', 'script.js', 'tracking.js',
   'why-follow.html', 'why-follow.js',
@@ -86,7 +100,7 @@ export function validateSite(root) {
   check(!/clerk|openSignIn|openSignUp/i.test(`${html}\n${script}`), 'Home UI and browser runtime must not include identity-provider code.');
 
   check(/<html\s+lang=["']en["']/i.test(whyFollow) && /<main\b/i.test(whyFollow) && /<h1\b/i.test(whyFollow), 'WHY FOLLOW page must have accessible document landmarks.');
-  check(whyFollow.includes('https://smoothtwinklive.com/why-follow'), 'WHY FOLLOW metadata must use its canonical URL.');
+  check(hasExpectedCanonicalUrl(whyFollow, 'https://smoothtwinklive.com/why-follow'), 'WHY FOLLOW metadata must use its canonical URL.');
   check(whyFollow.includes('WHY FOLLOW') && whyFollow.includes('SMOOTHTWINKVIBES'), 'WHY FOLLOW page must state its purpose and creator.');
   check((whyFollow.match(/data-referral-link/g) || []).length >= 2, 'WHY FOLLOW page must include top and final referral CTAs.');
   check(whyFollow.includes('href="/"') && whyFollow.includes('href="/#preview"') && whyFollow.includes('href="/#faq"'), 'WHY FOLLOW page must link to home, preview, and FAQ.');
