@@ -197,6 +197,25 @@ test('D1 and R2 errors return 503 without exposing exception details', async () 
   assert.doesNotMatch(await mediaResponse.text(), /private R2 detail/);
 });
 
+test('public static files are served through the Sites asset binding', async () => {
+  const { env } = bindings();
+  env.ASSETS = {
+    async fetch() {
+      return new Response('body { color: white; }', {
+        headers: { 'content-type': 'text/css; charset=UTF-8' },
+      });
+    },
+  };
+  const worker = createWorker();
+
+  const response = await worker.fetch(request('/styles.css'), env);
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-type'), 'text/css; charset=UTF-8');
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(await response.text(), 'body { color: white; }');
+});
+
 test('HTTP redirects to HTTPS and all HTTPS responses advertise HSTS', async () => {
   const { env } = bindings();
   const worker = createWorker({ pages: { home: '<!doctype html><title>Home</title>' } });

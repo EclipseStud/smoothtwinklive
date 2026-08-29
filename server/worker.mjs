@@ -65,6 +65,9 @@ export function createWorker({
       if (isPageMethod && url.pathname === '/robots.txt' && pages.robots) {
         return secured(new Response(request.method === 'HEAD' ? null : pages.robots, { headers: { 'Content-Type': 'text/plain; charset=UTF-8' } }));
       }
+      if (isPageMethod && !url.pathname.startsWith('/api/') && env.ASSETS?.fetch) {
+        return secured(await env.ASSETS.fetch(request));
+      }
 
       const mediaMatch = url.pathname.match(/^\/api\/media\/([^/]+)$/);
       const isPreviewStatus = url.pathname === '/api/preview-session' || url.pathname === '/api/access-status';
