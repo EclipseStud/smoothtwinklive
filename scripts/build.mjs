@@ -32,9 +32,9 @@ for (const relativePath of staticFiles) {
   const destination = path.join(outputRoot, relativePath);
   mkdirSync(path.dirname(destination), { recursive: true });
   copyFileSync(path.join(sourceRoot, relativePath), destination);
-  const publicDestination = path.join(outputRoot, 'public', relativePath);
-  mkdirSync(path.dirname(publicDestination), { recursive: true });
-  copyFileSync(path.join(sourceRoot, relativePath), publicDestination);
+  const clientDestination = path.join(outputRoot, 'client', relativePath);
+  mkdirSync(path.dirname(clientDestination), { recursive: true });
+  copyFileSync(path.join(sourceRoot, relativePath), clientDestination);
 }
 
 const renderReferralUrl = (content) => content.replaceAll('{{STRIPCHAT_REFERRAL_URL}}', getStripchatUrl());
@@ -46,9 +46,9 @@ writeFileSync(path.join(outputRoot, 'why-follow.html'), whyFollow);
 writeFileSync(path.join(outputRoot, 'live.html'), live);
 
 await build({ entryPoints:[path.join(sourceRoot, 'script.js')], outfile:path.join(outputRoot, 'script.js'), bundle:true, format:'iife', platform:'browser', target:'es2022', minify:true });
-copyFileSync(path.join(outputRoot, 'script.js'), path.join(outputRoot, 'public', 'script.js'));
+copyFileSync(path.join(outputRoot, 'script.js'), path.join(outputRoot, 'client', 'script.js'));
 await build({ entryPoints:[path.join(sourceRoot, 'why-follow.js')], outfile:path.join(outputRoot, 'why-follow.js'), bundle:true, format:'iife', platform:'browser', target:'es2022', minify:true });
-copyFileSync(path.join(outputRoot, 'why-follow.js'), path.join(outputRoot, 'public', 'why-follow.js'));
+copyFileSync(path.join(outputRoot, 'why-follow.js'), path.join(outputRoot, 'client', 'why-follow.js'));
 
 const generatedContent = path.join(sourceRoot, 'server', 'generated-content.mjs');
 const productionEntry = path.join(sourceRoot, 'server', 'production-entry.mjs');
