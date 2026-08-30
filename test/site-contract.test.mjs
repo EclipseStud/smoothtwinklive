@@ -136,6 +136,14 @@ test('production build keeps protected media private and contains no Clerk runti
     '.openai/drizzle/0001_age_attestations.sql',
     '.openai/drizzle/0002_preview_sessions.sql',
   ]) assert.equal(existsSync(path.join(projectRoot, 'dist', relativePath)), true, `Missing built ${relativePath}`);
+  for (const relativePath of [
+    'styles.css',
+    'script.js',
+    'tracking.js',
+    'assets/hero-abstract.png',
+    'assets/creator-placeholder-v1-768.jpg',
+    'assets/creator-placeholder-v1-1536.jpg',
+  ]) assert.equal(existsSync(path.join(projectRoot, 'dist', 'public', relativePath)), true, `Missing Sites static asset ${relativePath}`);
 
   const [builtHome, builtScript, builtWorker, packageJson, envExample] = await Promise.all([
     readFile(path.join(projectRoot, 'dist', 'index.html'), 'utf8'),
