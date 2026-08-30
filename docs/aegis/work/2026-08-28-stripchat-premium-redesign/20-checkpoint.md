@@ -42,3 +42,14 @@
 - Blocked on: none
 - Persistent-state guard: Historical `0001_age_attestations.sql` and live legacy table/rows remain; exact deletion confirmation not granted.
 - Next step: Run full validation, tests, build, migration inspection, diff checks, then Dogfood.
+
+## Checkpoint Update — Continuation Verification
+
+- Current todo: Phase 7 — browser Dogfood and authorized Sites release
+- Active slice: Multi-viewport browser proof before public release
+- Completed todos:
+- Phase 6 — continuation validation, full tests, production build, and diff check passed on 2026-08-29
+- Evidence refs:
+- continuation-local-green
+- Blocked on: Browser Dogfood tooling and Sites-provided source credentials are not available in this checkout.
+- Next step: Run the approved Dogfood matrix in a browser-enabled environment, then deploy with Sites-provided source credentials and complete hosted acceptance.

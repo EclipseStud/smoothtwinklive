@@ -17,3 +17,4 @@ Entries are workspace records, not authoritative runtime decisions.
 | 2026-08-28 | artifact | docs/aegis/work/2026-08-28-stripchat-premium-redesign/drift-check-draft.json | SmoothTwinkVibes Premium Redesign drift check draft |
 | 2026-08-28 | artifact | docs/aegis/work/2026-08-28-stripchat-premium-redesign/evidence-bundle-draft-baseline-green.json | 2026-08-28-stripchat-premium-redesign evidence baseline-green |
 | 2026-08-28 | artifact | docs/aegis/work/2026-08-28-stripchat-premium-redesign/resume-state-hint.json | 2026-08-28-stripchat-premium-redesign resume state hint |
+| 2026-08-29 | plan | docs/aegis/plans/2026-08-29-why-follow-superdesign-implementation.md | Why Follow Superdesign implementation and existing-Site delivery plan |

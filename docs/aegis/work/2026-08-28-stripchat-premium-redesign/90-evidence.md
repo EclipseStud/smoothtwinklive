@@ -1,6 +1,6 @@
 # SmoothTwinkVibes Premium Redesign - Evidence
 
-No evidence has been recorded yet.
+The following draft evidence records preserve the completed verification slices.
 
 ## EvidenceBundleDraft
 
@@ -8,6 +8,14 @@ No evidence has been recorded yet.
 - Type: command-suite
 - Source: npm run validate; npm test; npm run build; git diff --check
 - Summary: Baseline passed: 73 validation checks, 18/18 tests, 10 public static files plus protected Worker and D1 migration, clean diff check with line-ending warnings only.
+- Verifier: root agent
+
+## EvidenceBundleDraft
+
+- Artifact key: continuation-local-green
+- Type: command-suite
+- Source: `npm run validate`; `npm test`; `npm run build`; `git diff --check`
+- Summary: Continuation verification passed on 2026-08-29: 87 validation checks, 16/16 tests, a build containing 14 public static files plus the protected Worker and D1 migrations, and a clean diff check.
 - Verifier: root agent
 
 ## EvidenceBundleDraft
